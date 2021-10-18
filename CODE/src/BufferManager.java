@@ -18,7 +18,7 @@ public class BufferManager {
 			if(pool[i]==null) {
 				//System.out.println("AAAH");
 				pool[i] = new Frame(id); 
-				DiskManager.readPage(id, pool[i].buffer); 
+				DiskManager.readPage(id, ByteBuffer.wrap(pool[i].buffer)); 
 				pool[i].pin_count++; 
 				return ByteBuffer.wrap(pool[i].buffer, 0, pool[i].buffer.length); 
 			}
@@ -35,10 +35,10 @@ public class BufferManager {
 		if (File_FrameMRU.frameSuiv != null) {
 			//System.out.println("CCCH");
 			if(pool[File_FrameMRU.frameSuiv.index].dirty) {
-				DiskManager.writePage(pool[File_FrameMRU.frameSuiv.index].id, pool[File_FrameMRU.frameSuiv.index].buffer);
+				DiskManager.writePage(pool[File_FrameMRU.frameSuiv.index].id, ByteBuffer.wrap(pool[File_FrameMRU.frameSuiv.index].buffer));
 			}
 				Frame tmp = new Frame(id); 
-				DiskManager.readPage(id, tmp.buffer);
+				DiskManager.readPage(id, ByteBuffer.wrap(tmp.buffer));
 				pool[File_FrameMRU.frameSuiv.index] = tmp; 
 				tmp.pin_count++; 
 				File_FrameMRU.frameSuiv.supprimer();

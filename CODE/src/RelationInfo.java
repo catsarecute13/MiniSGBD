@@ -25,6 +25,6 @@ public class RelationInfo {
 			}
 		}
 		
-		slotCount= (DBParams.pageSize - 4*Integer.BYTES)/ (recordSize + 	(byte) 1);
+		slotCount= (DBParams.pageSize - 4*Integer.BYTES)/ (recordSize + (byte) 1);
 	}
 }
