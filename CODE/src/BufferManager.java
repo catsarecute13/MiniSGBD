@@ -1,3 +1,4 @@
+import java.nio.ByteBuffer; 
 public class BufferManager {
 	public Frame [] pool; 
 	public ListeChainee File_FrameMRU; 
@@ -8,7 +9,7 @@ public class BufferManager {
 		File_FrameMRU = new ListeChainee();
 	}
 	
-	public byte [] getpage(PageId id) {
+	public ByteBuffer getpage(PageId id) {
 		//System.out.println("ojso "+DBParams.frameCount);
 		/**for(int i=0; i<DBParams.frameCount; i++) {
 			System.out.println("Frame " + i + "égal à" + pool[i]);
@@ -19,7 +20,7 @@ public class BufferManager {
 				pool[i] = new Frame(id); 
 				DiskManager.readPage(id, pool[i].buffer); 
 				pool[i].pin_count++; 
-				return pool[i].buffer; 
+				return ByteBuffer.wrap(pool[i].buffer, 0, pool[i].buffer.length); 
 			}
 			else if (pool[i].id == id) {
 				//System.out.println("BBBH");
@@ -28,7 +29,7 @@ public class BufferManager {
 					pool[i].chaine.supprimer();
 
 				}
-				return pool[i].buffer; 
+				return ByteBuffer.wrap(pool[i].buffer, 0, pool[i].buffer.length); 
 			}
 		}
 		if (File_FrameMRU.frameSuiv != null) {
@@ -41,7 +42,7 @@ public class BufferManager {
 				pool[File_FrameMRU.frameSuiv.index] = tmp; 
 				tmp.pin_count++; 
 				File_FrameMRU.frameSuiv.supprimer();
-				return tmp.buffer; 
+				return ByteBuffer.wrap(tmp.buffer, 0, tmp.buffer.length); 
 		}
 		return null; 
 	}

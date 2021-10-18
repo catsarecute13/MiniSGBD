@@ -1,7 +1,10 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
 public class DiskManager { //singleton
+	private static DiskManager diskManager = new DiskManager();
+	
 	public static PageId AllocPage() throws Exception{
 		File dir = new File(DBParams.DBPath); 
 		File[] dirList = dir.listFiles(); 
@@ -44,12 +47,12 @@ public class DiskManager { //singleton
 	
 	
 	//Changer par ByteBuffer 
-	static void readPage(PageId pageID, byte [] buff) {
+	public static void readPage(PageId pageID, ByteBuffer buff) {
 		//Écrire sur buffer le contenu disque de la page identifiée par l'argument pageId. 
 		try {
 			RandomAccessFile file = new RandomAccessFile(DBParams.DBPath+"/F"+pageID.FileIdx+".df", "r" );
 			file.seek((pageID.PageIdx)*4096);
-			file.read(buff, 0, 4096); 
+			file.read(buff.array(), 0, 4096); 
 			file.close();
 		}catch (IOException e) {
 			System.out.println("Erreur E/S");
@@ -57,15 +60,21 @@ public class DiskManager { //singleton
 		}
 	}
 	
-	static void writePage(PageId pageID, byte [] buff) {	
+	public static void writePage(PageId pageID, ByteBuffer buff) {	
 		try {
 			RandomAccessFile file = new RandomAccessFile(DBParams.DBPath+"/F"+pageID.FileIdx+".df", "rw");
 			file.seek((pageID.PageIdx)*4096);
-			file.write(buff, 0, 4096);
+			file.write(buff.array(), 0, 4096);
 			file.close();
 		}catch (IOException e) {
 			System.out.println("Erreur E/S");
 		}
+		
 	}
-	
+	public static DiskManager getDiskManager() {
+		return diskManager; 
+	}
+
 }
+	
+
