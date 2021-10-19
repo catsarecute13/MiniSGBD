@@ -8,4 +8,8 @@ public class ColInfo {
 		typeCol = type; //On doit s'assurer que le type est soit int, soit float soit StringT (str de taille fixe)
 		//exception? assertion? 
 	}
+	
+	public ColInfo() {
+		this("","");
+	}
 }
