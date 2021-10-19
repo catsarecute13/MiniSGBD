@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Main {
 
 	public static void main(String[] args) throws Exception{
@@ -8,7 +10,19 @@ public class Main {
 			buff[i] = '1';
 		}
 		DiskManager.writePage(id, buff);
-		
+		DBManager.getDBManager().Init();
+		Scanner lectureClavier=new Scanner(system.in);
+		String chaine=new String();
+		while (true){
+			System.out.println(">>");
+			chaine=lectureClavier.nextLine();
+			if (chaine.equals("EXIT")){
+				DBManager.getDBManager().Finish();
+				break;
+			}
+			DBManager.getDBManager().ProcessCommand(chaine);
+		}
+		lectureClavier.close();
 	}
 
 }
