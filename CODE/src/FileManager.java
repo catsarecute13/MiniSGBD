@@ -3,8 +3,8 @@ import java.nio.ByteBuffer;
 public class FileManager{
 	private FileManager fileManager= new FileManager(); 
 	
-	public PageId readPageIdFromPageBuffer(ByteBuffer buffer, boolean first) {
-		if(first) {
+	public PageId readPageIdFromPageBuffer(ByteBuffer buffer, boolean pointeurPageVide) {
+		if(!pointeurPageVide) { 
 			buffer.position(0);
 			return new PageId(buffer.getInt(), buffer.getInt()); 
 		}
@@ -15,7 +15,7 @@ public class FileManager{
 	}
 	
 	public void writePageIdToPageBuffer(PageId id, ByteBuffer buffer, boolean first) {
-		if(first) {
+		if(!first) {
 			buffer.position(0); 
 			buffer.putInt(id.FileIdx); 
 			buffer.putInt(id.PageIdx); 
@@ -79,38 +79,39 @@ public class FileManager{
         page.position(Integer.BYTES*4);
         for(int i=0;i<nbSlots;i++){
             if (page.getInt(i)==0){
-                nbLibre+=1; //Nb de slots libres: si nbLibre>1, on ne déplace pas la page vers les pages pleines.
+                nbLibre+=1; //Nb de slots libres: si nbLibre>1, on ne deplace pas la page vers les pages pleines.
                 if (nbLibre==1){
                     slotIdx=i; //Le slot qu'on va utiliser
                 }
             }
         } 
 
-        //On aura jamais nbLibre ==0 car quand c'est égal à 1, on écrit le record puis on déplace directement 
+        //On aura jamais nbLibre ==0 car quand c'est egal a 1, on ecrit le record puis on dï¿½place directement 
         //le record dans les pages pleines 
         if (nbLibre ==1){
-        	//On écrit le record dans le slot libre 
-        	record.writeToBuffer(page, Integer.BYTES*4 + nbSlots + record.relation.recordSize*slotIdx);
+        	//On ecrit le record dans le slot libre 
+        	record.writeToBuffer(page, Integer.BYTES*4 + nbSlots* + record.relation.recordSize*slotIdx);
         
-        	//On déplace la page vers les pages pleines
+        	//On deplace la page vers les pages pleines
         	ByteBuffer headerPage = BufferManager.getBufferManager().getpage(relInfo.headerPageId); 
         	
-        	//Précédent dans page devient headerPage 
+        	//Precdent dans page devient headerPage 
         	//Suivant devient pageVide headerPage 
         	page.putInt(headerPage.getInt()); 
         	page.putInt(headerPage.getInt()); 
         	
         	//PageVide headerPage devient page
+        	headerPage.position(Integer.BYTES*2); //Update la position au pid de la page suivante
         	headerPage.putInt(pageId.FileIdx); 
         	headerPage.putInt(pageId.PageIdx); 
         	
-        	//On libère la page auprès de BufferManager avec dirty 
+        	//On libere la page aupres de BufferManager avec dirty 
         	BufferManager.getBufferManager().freePage(pageId, true);
         	return new Rid(pageId, slotIdx); 
         }
         else  {
-        	//On écrit le record dans le slot lib
-        	//On libère la page auprès de BufferManager avec dirty
+        	//On ecrit le record dans le slot lib
+        	//On libere la page aupres de BufferManager avec dirty
         	record.writeToBuffer(page, Integer.BYTES*4 + nbSlots + record.relation.recordSize*slotIdx);
         	BufferManager.getBufferManager().freePage(pageId, true);
         	return new Rid(pageId, slotIdx); 
@@ -125,7 +126,7 @@ public class FileManager{
     	Record tmpRecord = new Record(relInfo); 
     	page.position(Integer.BYTES*4); 
     	for(int i = 0; i< recordList.length; i++) {
-    		if(page.get(i)==1) { //On n'écrit que s'il y a des records
+    		if(page.get(i)==1) { //On n'ecrit que s'il y a des records
     			tmpRecord.readFromBuffer(page, relInfo.slotCount + i*relInfo.recordSize); 
         		recordList[i]=tmpRecord; 
     		}
@@ -135,15 +136,17 @@ public class FileManager{
     }
     
     public Rid InsertRecordIntoRelation(RelationInfo relInfo, Record record) {
-    	//On récupère le headerFile
+    	//On recupere le headerFile
     	ByteBuffer headerPage = BufferManager.getBufferManager().getpage(relInfo.headerPageId); 
-    	//On écrit le record dans le premier slot libre 
-    	headerPage.
+    	//On ecrit le record dans le premier slot libre 
+    	return writeRecordToDataPage(relInfo, record, new PageId(headerPage.getInt(), headerPage.getInt()));
+    
     }
     
-    public Record [] getAllRecords(relationInfo relInfo) {
-    	//On récupère le headerFile
+    public Record [] getAllRecords(RelationInfo relInfo) {
+    	//On recupere le headerFile
     	//On getRecords de toutes les pages
+    	return null; 
     }
     public FileManager getFileManager() {
     	return fileManager; 
