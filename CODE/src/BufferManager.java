@@ -12,7 +12,7 @@ public class BufferManager {
 	public ByteBuffer getpage(PageId id) {
 		//System.out.println("ojso "+DBParams.frameCount);
 		/**for(int i=0; i<DBParams.frameCount; i++) {
-			System.out.println("Frame " + i + "égal à" + pool[i]);
+			System.out.println("Frame " + i + "ï¿½gal ï¿½" + pool[i]);
 		}*/
 		for(int i=0; i< DBParams.frameCount; i++) {
 			if(pool[i]==null) {
@@ -65,6 +65,15 @@ public class BufferManager {
 		}
 	}
 	
+	public void FlushAll(){
+        for (Frame element:pool){
+            if (element.dirty) {
+                DiskManager.writePage(element.id, element.buffer); 
+            }
+            pool.clear();
+        }
+    }
+
 	static public BufferManager getBufferManager() {
 		return bufferManager; 
 	}
