@@ -13,14 +13,35 @@ public class DBManager {
     }
 
     public void ProcessCommand(String ch) throws Exception{
-    	StringTokenizer st = new StringTokenizer(ch, " ");
-		if(st.nextToken().equals("CREATE") && st.nextToken().equals("TABLE") ){
-			CreateRelationCommand createRel = new CreateRelationCommand(ch);
-			createRel.Execute();
-		}
-	}
-		
+        StringTokenizer tok=new StringTokenizer(ch);
+        String first=tok.nextToken();
+        switch (first) {
+            case "CREATE":
+                CreateRelationCommand createRel = new CreateRelationCommand(ch);
+                createRel.Execute();
+                break;
+            case "DROPDB":
+                DROPDBCommand drop=new DROPDBCommand(ch);
+                drop.Execute();
+                break;
+            case "INSERT":
+                InsertCommand insert=new InsertCommand(ch);
+                insert.Execute();
+                break;
+            case "BATCHINSERT":
+                BatchInsertCommand batch=new BatchInsertCommand(ch);
+                batch.Execute();
+                break;
+            case "SELECTMONO":
+                //Le nom que Mayel va choisir
+        }
+    }
+
     public static DBManager getDBManager(){
         return DBManager;
+    }
+
+    public static void setDBManager(){
+        DBManager=new DBManager();
     }
 }
