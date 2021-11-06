@@ -1,4 +1,7 @@
+import java.nio.ByteBuffer;
 import java.util.ArrayList; 
+@Deprecated
+
 public class BufferManagerNUL {
 	public ArrayList<Frame> pool; 
 	public int mru;
@@ -16,7 +19,7 @@ public class BufferManagerNUL {
 			else {
 				pool.set(pool.size(), new Frame(id));
 				pool.get(pool.size()-1).pin_count++; 
-				DiskManager.readPage(pool.get(pool.size()-1).id, pool.get(pool.size()-1).buffer);
+				DiskManager.readPage(pool.get(pool.size()-1).id, ByteBuffer.wrap(pool.get(pool.size()-1).buffer));
 				mru = pool.size() - 1; 
 				return pool.get(pool.size()-1).buffer; 
 			}
@@ -28,17 +31,17 @@ public class BufferManagerNUL {
 	}
 	private int remplacementMRU(PageId id) {
 		int min =DBParams.frameCount;
-		int index=-1; //attention à ça 
+		int index=-1; //attention ï¿½ ï¿½a 
 		for(int i = 0; i<DBParams.frameCount; i++){
 			if (pool.get(i).pin_count == 0 && pool.get(i).temps <min) {
 				index = i; 
 			}
 		}
 		if(pool.get(index).dirty) {
-			DiskManager.writePage(id, pool.get(index).buffer);
+			DiskManager.writePage(id,ByteBuffer.wrap(pool.get(index).buffer));
 		}
 		pool.get(index).pin_count++; 
-		DiskManager.readPage(pool.get(index).id, pool.get(index).buffer);
+		DiskManager.readPage(pool.get(index).id,ByteBuffer.wrap(pool.get(index).buffer));
 		return index ;
 		
 	}

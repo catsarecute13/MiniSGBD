@@ -10,10 +10,7 @@ public class BufferManager {
 	}
 	
 	public ByteBuffer getpage(PageId id) {
-		//System.out.println("ojso "+DBParams.frameCount);
-		/**for(int i=0; i<DBParams.frameCount; i++) {
-			System.out.println("Frame " + i + "égal à" + pool[i]);
-		}*/
+		
 		for(int i=0; i< DBParams.frameCount; i++) {
 			if(pool[i]==null) {
 				//System.out.println("AAAH");
@@ -22,7 +19,7 @@ public class BufferManager {
 				pool[i].pin_count++; 
 				return ByteBuffer.wrap(pool[i].buffer, 0, pool[i].buffer.length); 
 			}
-			else if (pool[i].id == id) {
+			else if (pool[i].id.equals(id)) {
 				//System.out.println("BBBH");
 				pool[i].pin_count ++; 
 				if (pool[i].pin_count == 1) {
@@ -44,17 +41,19 @@ public class BufferManager {
 				File_FrameMRU.frameSuiv.supprimer();
 				return ByteBuffer.wrap(tmp.buffer, 0, tmp.buffer.length); 
 		}
-		return null; 
+		System.out.println("va retourner null");
+		return null;
+		 
 	}
 	
 	void freePage(PageId id,boolean valdirty) {
 		for(int i = 0; i<DBParams.frameCount; i++) {
-			if(pool[i].id == id) {
+			if(pool[i].id.equals(id)) {
 				if(pool[i].dirty != true) {
 					pool[i].dirty=valdirty; 
 				}
 				pool[i].pin_count--;
-				if (pool[i].pin_count == 0) {
+				if (pool[i].pin_count== 0) {
 					ListeChainee tmp = new ListeChainee(i);
 					pool[i].chaine = tmp; 
 					File_FrameMRU.ajouter(tmp);
@@ -65,6 +64,15 @@ public class BufferManager {
 		}
 	}
 	
+	public void FlushAll(){
+        for (Frame element:pool){
+            if (element.dirty) {
+                DiskManager.writePage(element.id, ByteBuffer.wrap(element.buffer)); //changer type
+            }
+            pool.clear();
+        }
+    }
+
 	static public BufferManager getBufferManager() {
 		return bufferManager; 
 	}

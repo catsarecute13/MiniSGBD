@@ -42,17 +42,18 @@ public class DiskManager { //singleton
 				}	
 			
 		}
+		
 		return null;
 	}
 	
 	
 	//Changer par ByteBuffer 
 	public static void readPage(PageId pageID, ByteBuffer buff) {
-		//Écrire sur buffer le contenu disque de la page identifiée par l'argument pageId. 
+		//ï¿½crire sur buffer le contenu disque de la page identifiï¿½e par l'argument pageId. 
 		try {
 			RandomAccessFile file = new RandomAccessFile(DBParams.DBPath+"/F"+pageID.FileIdx+".df", "r" );
-			file.seek((pageID.PageIdx)*4096);
-			file.read(buff.array(), 0, 4096); 
+			file.seek((pageID.PageIdx)*DBParams.pageSize);
+			file.read(buff.array(), 0, DBParams.pageSize); 
 			file.close();
 		}catch (IOException e) {
 			System.out.println("Erreur E/S");
@@ -63,8 +64,8 @@ public class DiskManager { //singleton
 	public static void writePage(PageId pageID, ByteBuffer buff) {	
 		try {
 			RandomAccessFile file = new RandomAccessFile(DBParams.DBPath+"/F"+pageID.FileIdx+".df", "rw");
-			file.seek((pageID.PageIdx)*4096);
-			file.write(buff.array(), 0, 4096);
+			file.seek((pageID.PageIdx)*DBParams.pageSize);
+			file.write(buff.array(), 0, DBParams.pageSize);
 			file.close();
 		}catch (IOException e) {
 			System.out.println("Erreur E/S");

@@ -44,6 +44,15 @@ public class Record {
 		
 	}
 	
+	public String toString() {
+		StringBuffer buffer = new StringBuffer("");
+		for(int i = 0; i <relation.nbColonnes; i++) {
+			buffer.append(values[i]);
+		}
+		buffer.append("test");
+		return buffer.toString();
+	}
+	
 	
 
 }

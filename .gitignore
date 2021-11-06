@@ -1,4 +1,5 @@
 bin
 CODE/.classpath
 CODE/.project
-
+.classpath
+.project
