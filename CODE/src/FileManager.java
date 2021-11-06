@@ -79,15 +79,13 @@ public class FileManager{
         page.position(Integer.BYTES*4);
         for(int i=0;i<nbSlots;i++){
             if (page.getInt(i)==0){
-            	nbLibre+=1; //Nb de slots libres: si nbLibre>1, on ne deplace pas la page vers les pages pleines.
-                
-            	if (nbLibre==1){
+                nbLibre+=1; //Nb de slots libres: si nbLibre>1, on ne deplace pas la page vers les pages pleines.
+                if (nbLibre==1){
                     slotIdx=i; //Le slot qu'on va utiliser
-                   
-                   
                 }
             }
         } 
+
         //On aura jamais nbLibre ==0 car quand c'est egal a 1, on ecrit le record puis on d�place directement 
         //le record dans les pages pleines 
         if (nbLibre ==1){

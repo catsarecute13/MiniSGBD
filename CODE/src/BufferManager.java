@@ -10,7 +10,6 @@ public class BufferManager {
 	}
 	
 	public ByteBuffer getpage(PageId id) {
-		
 		for(int i=0; i< DBParams.frameCount; i++) {
 			if(pool[i]==null) {
 				//System.out.println("AAAH");
@@ -67,9 +66,10 @@ public class BufferManager {
 	public void FlushAll(){
         for (Frame element:pool){
             if (element.dirty) {
-                DiskManager.writePage(element.id, ByteBuffer.wrap(element.buffer)); //changer type
+                DiskManager.writePage(element.id, ByteBuffer.wrap(element.buffer)); 
+
             }
-            pool.clear();
+            pool.clear(); //a voir
         }
     }
 
