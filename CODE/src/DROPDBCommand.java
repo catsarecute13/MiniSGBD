@@ -5,7 +5,7 @@ public class DROPDBCommand{
 
     }
 
-    public Execute(){
+    public void Execute(){
         FileUtils.cleanDirectory(DBParams.DBPath); 
         BufferManager.getBufferManager().FlushAll();
         BufferManager.getBufferManager().File_FrameMRU=new ListeChainee();

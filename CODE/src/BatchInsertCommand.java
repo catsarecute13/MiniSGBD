@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.StringTokenizer;
 
 public class BatchInsertCommand{
@@ -16,14 +19,15 @@ public class BatchInsertCommand{
         }
     }
 
+    //il faut ajouter un try catch
     public void Execute(){
-        File file = new File(DBParams.dossierPrincipale+nomFichier);    //Ouverture
+        File file = new File(DBParams.DBPath+nomFichier);    //Ouverture
         FileReader fileReader = new FileReader(file);                   //du fichier
         BufferedReader bufferedReader = new BufferedReader(fileReader); //CSV
         String line;
         while ((line = bufferedReader.readLine()) != null) { //On lit ligne par ligne
             String chaine="INSERT INTO "+nomRelation+" RECORD ("+line+")"; // on crée une chaine de la forme "INSERT INTO nomRelation RECORD (val1,val2, … ,valn)" 
-            InsertCommand insert=new InsertCommand(ch); //insérer la ligne
+            InsertCommand insert=new InsertCommand(chaine); //insérer la ligne
             insert.Execute(); //Executer
         }
     }
