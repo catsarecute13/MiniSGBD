@@ -33,7 +33,7 @@ public class InsertCommand{
 
     public void Execute(){
         //comparer les types entre infoCol(RelationInfo) et le tableau l.
-        ByteBuffer buff=new ByteBuffer();
+        ByteBuffer buff=new ByteBuffer(); //FAUX ALLOCATE
         for(int i=0;i<l.size();i++){
             if (relation.infoCol.get(i).equals("int")){
                 buff.putInt(Integer.parseInt(l.get(i)));

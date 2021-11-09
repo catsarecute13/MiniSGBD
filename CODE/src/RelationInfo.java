@@ -21,7 +21,7 @@ public class RelationInfo {
 				recordSize+=Float.BYTES;
 			}
 			else {
-				recordSize+=Integer.valueOf(infoCol.get(i).typeCol.substring(6))*Character.BYTES;
+				recordSize+=Integer.valueOf(infoCol.get(i).typeCol.substring(6))*Character.BYTES +2;
 			}
 		}
 		
