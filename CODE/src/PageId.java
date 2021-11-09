@@ -8,5 +8,15 @@ public class PageId {
 		FileIdx=file; 
 		PageIdx= page; 
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return FileIdx== ((PageId)o).FileIdx && PageIdx== ((PageId)o).PageIdx; 
+	}
+	
+	@Override
+	public String toString() {
+		return "("+FileIdx+","+PageIdx+")"; 
+	}
 
 }

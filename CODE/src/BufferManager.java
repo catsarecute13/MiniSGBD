@@ -40,13 +40,16 @@ public class BufferManager {
 				File_FrameMRU.frameSuiv.supprimer();
 				return ByteBuffer.wrap(tmp.buffer, 0, tmp.buffer.length); 
 		}
-		System.out.println("va retourner null");
+		//System.out.println("va retourner null");
 		return null;
 		 
 	}
 	
 	void freePage(PageId id,boolean valdirty) {
 		for(int i = 0; i<DBParams.frameCount; i++) {
+			//System.out.println("pool["+i+"]" + pool[i]); 
+			//System.out.println("id "+ pool[i].id); 
+			//System.out.println("pageId donne en param"+ id); 
 			if(pool[i].id.equals(id)) {
 				if(pool[i].dirty != true) {
 					pool[i].dirty=valdirty; 
@@ -57,7 +60,7 @@ public class BufferManager {
 					pool[i].chaine = tmp; 
 					File_FrameMRU.ajouter(tmp);
 				}
-				
+				break; 
 			}
 			 
 		}
@@ -69,8 +72,11 @@ public class BufferManager {
                 DiskManager.writePage(element.id, ByteBuffer.wrap(element.buffer)); 
 
             }
-            pool.clear(); //a voir
+            
         }
+        for(Frame element :pool) { 
+        	element = null;  //Pas sure, a revoir
+        } 
     }
 
 	static public BufferManager getBufferManager() {

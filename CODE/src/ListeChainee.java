@@ -15,7 +15,10 @@ public class ListeChainee {
 	
 	public void supprimer() {
 		framePre.frameSuiv = this.frameSuiv; 
-		frameSuiv.framePre = this.framePre;
+		if(frameSuiv !=null) {
+			frameSuiv.framePre = this.framePre;
+		}
+		
 	}
 	
 	public void ajouter(ListeChainee frame) {

@@ -48,8 +48,8 @@ public class DiskManager { //singleton
 	
 	
 	//Changer par ByteBuffer 
-	public static void readPage(PageId pageID, ByteBuffer buff) {
-		//�crire sur buffer le contenu disque de la page identifi�e par l'argument pageId. 
+	public static void readPage(PageId pageID, ByteBuffer buff) { //si pageID == -1 0, on throws un nullPointerException
+		//Ecrire sur buffer le contenu disque de la page identifiee par l'argument pageId. 
 		try {
 			RandomAccessFile file = new RandomAccessFile(DBParams.DBPath+"/F"+pageID.FileIdx+".df", "r" );
 			file.seek((pageID.PageIdx)*DBParams.pageSize);

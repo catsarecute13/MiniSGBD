@@ -42,7 +42,6 @@ public class CreateRelationCommand {
 	//methode
 	public void Execute() throws Exception {
 		PageId pageId= FileManager.getFileManager().createHeaderPage();
-		
 		ColInfo colinf= new ColInfo();
 		ArrayList<ColInfo> tab= new ArrayList<ColInfo>();
 		

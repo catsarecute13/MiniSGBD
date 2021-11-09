@@ -1,5 +1,5 @@
 import java.nio.ByteBuffer;
-import java.util.ArrayList; 
+import java.nio.charset.StandardCharsets;
 public class Record {
 	public RelationInfo relation; 
 	public Object [] values; 
@@ -10,17 +10,21 @@ public class Record {
 		values = new Object [relation.nbColonnes]; 
 	}
 	
+	/**
+	 * Ecrit contenu d'un record dans le buffer
+	 * */
 	public void writeToBuffer(ByteBuffer buffer, int position) {
+		buffer.position(position); 
 		for(int i = 0; i < relation.nbColonnes; i++) {
 			Object tmp= values[i]; 
 			if(tmp instanceof Integer) {
-				buffer.putInt(position, ((Integer) tmp).intValue());
+				buffer.putInt(((Integer) tmp).intValue());
 				}
 			else if(tmp instanceof Float) {
-				buffer.putFloat(position, ((Float) tmp).floatValue()); 
+				buffer.putFloat(((Float) tmp).floatValue()); 
 			}
 			else {
-				buffer.put(((String) tmp).getBytes(), position, ((String) tmp).length()); 
+				buffer.put(((String) tmp).getBytes(StandardCharsets.UTF_16)); 
 			}
 		}
 	}
@@ -35,24 +39,31 @@ public class Record {
 				values[i] = buffer.getFloat();
 			}
 			else {
-				int length = Integer.valueOf(relation.infoCol.get(i).typeCol.substring(6)) * Character.BYTES; 
+				int length = Integer.valueOf(relation.infoCol.get(i).typeCol.substring(6)) * Character.BYTES +2; 
 				byte [] tab = new byte[length]; 
 				buffer.get(tab, 0, length);
-				values[i]= new String(tab); 
+				values[i]= new String(tab, StandardCharsets.UTF_16); 
 			}
 		}
 		
 	}
 	
+	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer("");
+		StringBuffer buffer = new StringBuffer("(");
 		for(int i = 0; i <relation.nbColonnes; i++) {
-			buffer.append(values[i]);
+			Object tmp= values[i]; 
+			if(tmp instanceof Integer) {
+				buffer.append(((Integer) tmp).intValue()).append(",");
+				}
+			else if(tmp instanceof Float) {
+				buffer.append(((Float)tmp).floatValue()).append(","); 
+			}
+			else {
+				buffer.append((String)tmp).append(","); 
+			}
 		}
-		buffer.append("test");
-		return buffer.toString();
+		
+		return buffer.deleteCharAt(buffer.length()-1).append(")").toString();
 	}
-	
-	
-
 }

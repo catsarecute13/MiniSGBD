@@ -22,7 +22,7 @@ public class DBManager {
                 break;
             case "DROPDB":
                 DROPDBCommand drop=new DROPDBCommand(ch);
-                drop.Execute();
+                drop.Execute(); 
                 break;
             case "INSERT":
                 InsertCommand insert=new InsertCommand(ch);
@@ -34,6 +34,8 @@ public class DBManager {
                 break;
             case "SELECTMONO":
                 //Le nom que Mayel va choisir
+            	SelectMonoCommand selectMono = new SelectMonoCommand(ch); 
+            	selectMono.Execute(); 
         }
     }
 
