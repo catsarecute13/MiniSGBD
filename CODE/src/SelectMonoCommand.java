@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class SelectMonoCommand {
 //	public ArrayList<String> conditions; //HashMap nomCol,op valeur ? 
-	public HashMap<String[], Comparable> conditions; // redefinir equals! [nomCol, op], Valeur
+	public HashMap<String[], Object> conditions; // redefinir equals! [nomCol, op], Valeur
 	public ArrayList<String> op; 
 	public String nomRelation; 
 	public RelationInfo relation; 
@@ -15,7 +15,7 @@ public class SelectMonoCommand {
 	
 	public SelectMonoCommand(String ch) {
 		//conditions = new ArrayList<String>(); 
-		conditions = new HashMap<String[],Comparable>(); 
+		conditions = new HashMap<String[],Object>(); 
 		StringTokenizer st = new StringTokenizer(ch); 
 		//ArrayList<String> op = new ArrayList<String>(); 
 		st.nextToken(); //SELECTMONO 
@@ -83,31 +83,32 @@ public class SelectMonoCommand {
 			for(Record r : res) {
 				for(String [] k : conditions.keySet()) {
 					int i =relation.getIdxInfoCol(k[0]); 
+					int retourCompare = compareTo(r.values[i],conditions.get(k)); 
 					switch(k[1]) { //k[1] est l'operateur //Vu qu'on utilise compareTo on peut imaginer donner le resultat avec des AND
 					case ">": // Faire selon le type 
-						if((r.values[i]).compareTo(conditions.get(k)){
+						if(retourCompare <=0){
 							res.remove(r); 
 							break;}
 					case ">=": 
-						if(r.values[i]<conditions.get(k)) {
+						if(retourCompare<0) {
 							res.remove(r); 
 							break;}
 					case "<": 
-						if(r.values[i])>= conditions.get(k)){
+						if(retourCompare>= 0){
 							res.remove(r); 
 							break;}
 					case "<=": 
-						if(r.values[i]> conditions.get(k)) {
+						if(retourCompare >0) {
 							res.remove(r);
 							break; 
 						}
 					case "<>": 
-						if(r.values[i] == conditions.get(k)) {
+						if(retourCompare ==0) {
 							res.remove(r); 
 							break; 
 						}
 					case "=": 
-						if(r.values[i] != conditions.get(k)) {
+						if(retourCompare != 0) {
 							res.remove(r); 
 							break; 
 						}
@@ -116,5 +117,18 @@ public class SelectMonoCommand {
 				}
 			}
 		}
+	}
+	
+	private int compareTo(Object obj1, Object obj2) {
+		if(obj1 instanceof Integer) {
+			((Integer)obj1).compareTo((Integer)obj2); 
+		}
+		else if (obj1 instanceof Float ) {
+			((Float)obj1).compareTo((Float)obj2); 
+		}
+		else {
+			((String)obj1).compareTo((String)obj2); 
+		}
+		return 0; 
 	}
 }
