@@ -26,6 +26,14 @@ public class Catalog {
 		
 	}
 	
+	public RelationInfo getRelation(String nomRel) {
+		for(RelationInfo e : relationTab) {
+			if(e.nomRelation.equals(nomRel)) {
+				return e; 
+			}
+		}
+		return null; 
+	}
 	static public Catalog getCatalog() {
 		return catalog;}
 }

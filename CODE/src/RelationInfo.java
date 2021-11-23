@@ -27,4 +27,14 @@ public class RelationInfo {
 		
 		slotCount= (DBParams.pageSize - 4*Integer.BYTES)/ (recordSize + (byte) 1);
 	}
+	
+	public int getIdxInfoCol(String nomCol) {
+		for(int i = 0; i <infoCol.size(); i++) {
+			if (infoCol.get(i).nomCol.equals(nomCol)) {
+				return i; 
+			}
+		}
+		return -1; 
+	}
+	
 }

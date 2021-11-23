@@ -1,4 +1,3 @@
-
 public class ColInfo {
 	public String nomCol; 
 	public String typeCol; 
@@ -11,5 +10,12 @@ public class ColInfo {
 	
 	public ColInfo() {
 		this("","");
+	}
+	
+	public String getTypeCol(String nomCol) {
+		if(this.nomCol.equals(nomCol)) {
+			return this.typeCol; 
+		}
+		return null; 
 	}
 }

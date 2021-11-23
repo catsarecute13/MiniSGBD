@@ -9,7 +9,7 @@ public class DROPDBCommand{
         cleanDirectory(DBParams.DBPath); 
         BufferManager.getBufferManager().FlushAll();
         BufferManager.getBufferManager().File_FrameMRU=new ListeChainee();
-        Catalog.setCatalog();
+        Catalog.setCatalog(); //Voir si c'est bien ce qu'on doit faire 
         DiskManager.setDiskManager();
         FileManager.setFileManager();
         //DBManager.setDBManager();  //NOT SO SURE ABOUT
@@ -21,7 +21,7 @@ public class DROPDBCommand{
     	if (dirList != null){
     		for(File file : dirList) {
         		if(file.isDirectory()) {
-        			cleanDirectory(file.getPath()); 
+        			cleanDirectory(file.getPath()); //verfier que ce n'est pas la methode getAbsolutePath qu'on doit utilisers
         		}
         		else {
         			file.delete(); 
