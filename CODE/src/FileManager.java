@@ -1,4 +1,5 @@
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 public class FileManager{
 	private static FileManager fileManager= new FileManager(); 
@@ -173,10 +174,41 @@ public class FileManager{
     }
     
     public Record [] getAllRecords(RelationInfo relInfo) {
+    	PageId pidFactice = new PageId(-1, -1); 
+    	ArrayList<Record> allRecords = new ArrayList<Record>(); //la liste ou on va mettre tous les records 
     	//On recupere le headerFile
+    	ByteBuffer headerPage = BufferManager.getBufferManager().getpage(relInfo.headerPageId); 
     	//On getRecords de toutes les pages
-    	return null; 
+    		//On get les record des pages pleines, puis les records des pages nonPleines 
+    	Record tmpRecord = new Record(relInfo);
+    	PageId pageId = readPageIdFromPageBuffer(headerPage, false);
+    	while(!pageId.equals(pidFactice)) {
+    		ByteBuffer bufferPage = BufferManager.getBufferManager().getpage(pageId); 
+        	bufferPage.position(Integer.BYTES*4); 
+    	for(int i = 0; i< relInfo.slotCount; i++) { //ici on est dans les pages pleines, pas la peine de verifier la bytemap
+    		byte tmp = bufferPage.get(Integer.BYTES*4 +i); 
+    				tmpRecord.readFromBuffer(bufferPage, Integer.BYTES*4 +relInfo.slotCount + i*relInfo.recordSize); 
+        			allRecords.add(tmpRecord);
+        		}
+    	pageId = readPageIdFromPageBuffer(bufferPage, true); 
+    	}
+    	//On recupere les record des pages non pleines 
+    	pageId = readPageIdFromPageBuffer(headerPage, true); 
+    	while(!pageId.equals(pidFactice)) {
+    		ByteBuffer bufferPage = BufferManager.getBufferManager().getpage(pageId); 
+    		bufferPage.position(Integer.BYTES*4); 
+    		for(int i = 0; i< relInfo.nbColonnes; i++) {
+        		byte tmp = bufferPage.get(Integer.BYTES*4 +i); 
+        		if(tmp==(byte)1) { //On verifie la bytemap parce qu'on ne prend que les slots remplis 
+        			tmpRecord.readFromBuffer(bufferPage, Integer.BYTES*4 +relInfo.slotCount + i*relInfo.recordSize); 
+            		allRecords.add(tmpRecord); 
+        		}
+    		}
+    	}
+    return allRecords.toArray(Record []::new); //VERFIER QUE CA MARCHE BIEN 
     }
+    
+    
     public static FileManager getFileManager() {
     	return fileManager; 
     }
