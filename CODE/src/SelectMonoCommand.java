@@ -12,7 +12,8 @@ public class SelectMonoCommand {
 	public RelationInfo relation; 
 	public Record record;
 	public boolean verifWhere; 
-	
+	public ArrayList<Record> upd;
+
 	public SelectMonoCommand(String ch) {
 		//conditions = new ArrayList<String>(); 
 		conditions = new HashMap<String[],Object>(); 
@@ -65,7 +66,8 @@ public class SelectMonoCommand {
 		ArrayList<Record> res =new ArrayList<Record>(Arrays.asList(FileManager.getFileManager().getAllRecords(relation))); 
 		if(!verifWhere) {
 			for(Record r: res) {
-			System.out.println(r);}
+				System.out.println(r);
+			}
 			System.out.println("Total record :"+res.size());
 		}
 		else {
@@ -130,5 +132,57 @@ public class SelectMonoCommand {
 			((String)obj1).compareTo((String)obj2); 
 		}
 		return 0; 
+	}
+
+
+	public void Update() {
+		upd=new ArrayList<Record>(Arrays.asList(FileManager.getFileManager().getAllRecords(relation)));
+		//verifier criteres des condition <1 ou >20 
+		int nbConditions = conditions.keySet().size() ; 
+			if(nbConditions <1 || nbConditions>20 ) {
+				System.out.println("Veuillez entrer un nombre de conditions entre 1 et 20 (inclus)!"); 
+				return ; 
+			}
+			/**
+			 * Pour chaque record on verifie toutes les conditions
+			 * 		Si une condition n'est pas satisfaite, on supprime le record des resultats; 
+			 * 			
+			 * */
+		for(Record r : upd) {
+			for(String [] k : conditions.keySet()) {
+				int i =relation.getIdxInfoCol(k[0]); 
+				int retourCompare = compareTo(r.values[i],conditions.get(k)); 
+				switch(k[1]) { //k[1] est l'operateur //Vu qu'on utilise compareTo on peut imaginer donner le resultat avec des AND
+					case ">": // Faire selon le type 
+						if(retourCompare <=0){
+							upd.remove(r); 
+							break;}
+					case ">=": 
+						if(retourCompare<0) {
+							upd.remove(r); 
+							break;}
+					case "<": 
+						if(retourCompare>= 0){
+							upd.remove(r); 
+							break;}
+					case "<=": 
+						if(retourCompare >0) {
+							upd.remove(r);
+							break; 
+						}
+					case "<>": 
+						if(retourCompare ==0) {
+							upd.remove(r); 
+							break; 
+						}
+					case "=": 
+						if(retourCompare != 0) {
+							upd.remove(r); 
+							break; 
+						}
+				}
+	
+			}
+		}
 	}
 }
