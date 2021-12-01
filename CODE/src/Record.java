@@ -67,6 +67,32 @@ public class Record {
 		return buffer.deleteCharAt(buffer.length()-1).append(")").toString();
 	}
 	
-	
-
+	public static String Merge(Record r1, Record r2){
+		StringBuffer sb=new StringBuffer("(");
+		for(int i = 0; i <r1.relation.nbColonnes; i++) {
+			Object tmp= r1.values[i]; 
+			if(tmp instanceof Integer) {
+				sb.append(((Integer) tmp).intValue()).append(",");
+				}
+			else if(tmp instanceof Float) {
+				sb.append(((Float)tmp).floatValue()).append(","); 
+			}
+			else {
+				sb.append((String)tmp).append(","); 
+			}
+		}
+		for(int i = 0; i <r2.relation.nbColonnes; i++) {
+			Object tmp= r2.values[i]; 
+			if(tmp instanceof Integer) {
+				sb.append(((Integer) tmp).intValue()).append(",");
+				}
+			else if(tmp instanceof Float) {
+				sb.append(((Float)tmp).floatValue()).append(","); 
+			}
+			else {
+				sb.append((String)tmp).append(","); 
+			}
+		}
+		return sb.deleteCharAt(buffer.length()-1).append(")").toString();
+	}
 }
