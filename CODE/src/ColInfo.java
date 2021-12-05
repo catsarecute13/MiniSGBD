@@ -4,8 +4,7 @@ public class ColInfo {
 	
 	public ColInfo(String nom, String type) {
 		nomCol= nom; 
-		typeCol = type; //On doit s'assurer que le type est soit int, soit float soit StringT (str de taille fixe)
-		//exception? assertion? 
+		typeCol = type; 
 	}
 	
 	public ColInfo() {
@@ -17,5 +16,9 @@ public class ColInfo {
 			return this.typeCol; 
 		}
 		return null; 
+	}
+	
+	public String toString() {
+		return "nom col:"+ nomCol +"type col :"+typeCol; 
 	}
 }

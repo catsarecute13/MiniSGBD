@@ -37,4 +37,16 @@ public class RelationInfo {
 		return -1; 
 	}
 	
+	public String toString() { 
+		StringBuffer buffer = new StringBuffer("Nom relation: "+ nomRelation +"\nnb colonnes :"+ nbColonnes); 
+		buffer.append("\nNom colonne | Type colonne\n"); 
+		System.out.println("infoCol size" +infoCol.size()); 
+		for(int i= 0; i<infoCol.size() ;i++) {
+			buffer.append(infoCol.get(i).toString()).append("\n"); 
+		}
+		buffer.append("headerPage Id: ").append(headerPageId).append("\n"); 
+		buffer.append("recordSize: ").append(recordSize).append("\n"); 
+		buffer.append("slotCount: ").append(slotCount).append("\n");
+		return buffer.toString(); 
+	} 
 }

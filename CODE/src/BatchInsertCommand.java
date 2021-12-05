@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.StringTokenizer;
 
 public class BatchInsertCommand{
@@ -20,7 +22,7 @@ public class BatchInsertCommand{
     }
 
     //il faut ajouter un try catch
-    public void Execute(){
+    public void Execute() throws Exception{
         File file = new File(DBParams.DBPath+nomFichier);    //Ouverture
         FileReader fileReader = new FileReader(file);                   //du fichier
         BufferedReader bufferedReader = new BufferedReader(fileReader); //CSV

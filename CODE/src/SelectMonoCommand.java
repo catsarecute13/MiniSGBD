@@ -118,6 +118,12 @@ public class SelectMonoCommand {
 					
 				}
 			}
+			//affichage des records
+			for(Record r: res) {
+				System.out.println(r);
+			}
+			System.out.println("Total record :"+res.size());
+		
 		}
 	}
 	

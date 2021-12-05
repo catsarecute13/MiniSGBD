@@ -23,7 +23,7 @@ public class UpdateCommand {
     }
 
     public void Execute(){
-        SelectMonoCommand commande=new SelectMonoCommand("SELECTMONO * FROM "+nomRelation+where);
+        SelectMonoCommand commande=new SelectMonoCommand("SELECTMONO * FROM "+nomRelation+where); //oubli des espaces? 
         commande.update();
         ArrayList<Record> res=commande.upd;
         HashMap<String,String> colonne=new HashMap<String,String>();
@@ -70,6 +70,8 @@ public class UpdateCommand {
                 }
             }
         }
-        // ON A LA LISTE DES RECORDS CHANGéS DANS RES. COMMENT LES éCRIRE SUR DISQUE OU DANS LA RELATION..        
+        // ON A LA LISTE DES RECORDS CHANGéS DANS RES. COMMENT LES éCRIRE SUR DISQUE OU DANS LA RELATION.. 
+        
+        
     }
 }

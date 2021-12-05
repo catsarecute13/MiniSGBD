@@ -5,6 +5,7 @@ public class Catalog {
 	public int compteur; 
 	
 	public Catalog() {
+		Init(); 
 	}
 	
 	public void Init() {
@@ -21,7 +22,6 @@ public class Catalog {
 		if (!relationTab.contains(relation)){
 			relationTab.add(relation);
 			compteur += 1; 
-			
 		}
 		
 	}
@@ -34,6 +34,7 @@ public class Catalog {
 		}
 		return null; 
 	}
+	
 	static public Catalog getCatalog() {
 		return catalog;}
 }

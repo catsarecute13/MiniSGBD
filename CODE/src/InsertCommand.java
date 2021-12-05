@@ -1,11 +1,13 @@
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.util.List;
+import java.util.StringTokenizer; 
 
 public class InsertCommand{
-    RelationInfo relation;
-    String nomRelation;
-    Record record;
+    public RelationInfo relation;
+    public String nomRelation;
+    public Record record;
+    public List<String> valuesRecord ; 
     public InsertCommand(String chaine){
         StringTokenizer ch=new StringTokenizer(chaine);
         ch.nextToken();
@@ -17,9 +19,9 @@ public class InsertCommand{
         av.deleteCharAt(0);
         av.deleteCharAt(av.length()-1);
         ch=new StringTokenizer(av.toString(),",");
-        ArrayList<String> l=new ArrayList<String>();
+        valuesRecord=new ArrayList<String>();
         while(ch.hasMoreTokens()){
-            l.add(ch.nextToken());
+            valuesRecord.add(ch.nextToken());
         }
         //Chercher dans le catalog la relation
         for(RelationInfo e:Catalog.getCatalog().relationTab){
@@ -33,16 +35,17 @@ public class InsertCommand{
 
     public void Execute(){
         //comparer les types entre infoCol(RelationInfo) et le tableau l.
-        ByteBuffer buff=new ByteBuffer(); //FAUX ALLOCATE
-        for(int i=0;i<l.size();i++){
+        ByteBuffer buff=ByteBuffer.allocate(relation.recordSize); //FAUX ALLOCATE
+        int taille = valuesRecord.size(); 
+        for(int i=0;i<taille;i++){
             if (relation.infoCol.get(i).equals("int")){
-                buff.putInt(Integer.parseInt(l.get(i)));
+                buff.putInt(Integer.parseInt(valuesRecord.get(i)));
             }
             else if (relation.infoCol.get(i).equals("float")){
-                buff.putFloat(Float.parseFloat(l.get(i)));
+                buff.putFloat(Float.parseFloat(valuesRecord.get(i)));
             }
             else {
-                buff.put(l.get(i).getBytes());
+                buff.put(valuesRecord.get(i).getBytes());
             }
         }
         //mettre dans record

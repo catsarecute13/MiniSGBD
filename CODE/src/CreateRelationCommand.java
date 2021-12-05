@@ -48,11 +48,23 @@ public class CreateRelationCommand {
 		for(int i=0; i<nomColonne.size(); i++) {
 			colinf.nomCol= nomColonne.get(i);
 			colinf.typeCol= typeColonne.get(i);
+			System.out.println(colinf.nomCol);
+			System.out.println(colinf.typeCol);
+
 			tab.add(colinf);
 		}
 		nbColonnes=tab.size();
 		RelationInfo rel =new RelationInfo(nomRelation, nbColonnes,  tab, pageId);
 		Catalog.getCatalog().AddRelation(rel);
+	}
+	
+	public String toString() { 
+		StringBuffer buffer = new StringBuffer("Nom relation: "+ nomRelation +"\nnb colonnes :"+ nbColonnes); 
+		buffer.append("Nom colonne | Type colonne\n"); 
+		for(int i= 0; i<nomColonne.size() ;i++) {
+			buffer.append(nomColonne.get(i)).append(" | ").append(typeColonne.get(i)).append("\n");
+		}
+		return buffer.toString() ;
 	}
 	
 	
