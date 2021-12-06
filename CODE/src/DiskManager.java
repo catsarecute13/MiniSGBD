@@ -2,42 +2,67 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.Comparator;
 public class DiskManager { //singleton
 	private static DiskManager diskManager = new DiskManager();
-	
-	public static PageId AllocPage() throws Exception{
+	private final static ByteBuffer BUFFERDEZERO = ByteBuffer.allocate(DBParams.pageSize);
+
+	public static PageId AllocPage() {
 		File dir = new File(DBParams.DBPath); 
 		File[] dirList = dir.listFiles(); 
+		int ce = new File(DBParams.DBPath+"/Catalog.def").exists() ? 1 : 0; 
 		
-		
+		Arrays.sort(dirList, new Comparator<File>(){ 
+			@Override
+			public int compare(File f1, File f2) {
+				return f1.getName().compareTo(f2.getName()); 
+			}
+		});
 		if(dirList != null) { 
-			if (dirList.length == 0) { 
+			if (dirList.length - ce ==0 ) { 
 				File fichier = new File(DBParams.DBPath+"/F"+dirList.length+".df"); 
-				fichier.createNewFile(); 
-				PageId id = new PageId(0,0); 
+				try {
+					fichier.createNewFile();
+				} catch (IOException e) {
+					System.out.println("Impossible de créer le fichier: "+ DBParams.DBPath+"/F"+dirList.length+".df");
+					System.exit(-1);
+				} 
+				PageId id = new PageId(0,0);
+				DiskManager.writePage(id, BUFFERDEZERO);
 				return id; }
 			
 			else {
 				if (dirList[dirList.length-1].length() > 12288) {
 					File fichier = new File(DBParams.DBPath+"/F"+ dirList.length+".df"); 
-					fichier.createNewFile();
-					PageId id = new PageId(dirList.length , 0);
+					try {
+						fichier.createNewFile();
+					} catch (IOException e) {
+						System.out.println("Impossible de créer le fichier: "+ DBParams.DBPath+"/F"+dirList.length+".df");
+						System.exit(-1);
+					}
+					PageId id = new PageId(dirList.length -ce , 0);
+					DiskManager.writePage(id, BUFFERDEZERO);
 					return id;}
 				
 				else if(dirList[dirList.length-1].length() == 0) {
-					PageId id = new PageId(dirList.length -1, 0);
+					PageId id = new PageId(dirList.length -1 -ce, 0);
+					DiskManager.writePage(id, BUFFERDEZERO);
 					return id;}
 				
 				else if(dirList[dirList.length-1].length() <= 4096) {		
-						PageId id = new PageId(dirList.length-1, 1); 
+						PageId id = new PageId(dirList.length-1 -ce, 1); 
+						DiskManager.writePage(id, BUFFERDEZERO);
 						return id;}
 				
 				else if (dirList[dirList.length-1].length() <= 8192) {
-						PageId id = new PageId(dirList.length-1, 2);
+						PageId id = new PageId(dirList.length-1 -ce, 2);
+						DiskManager.writePage(id, BUFFERDEZERO);
 						return id;}
 				
 				else if(dirList[dirList.length-1].length() <= 12288) {
-						PageId id = new PageId(dirList.length-1, 3); 
+						PageId id = new PageId(dirList.length-1 -ce, 3); 
+						DiskManager.writePage(id, BUFFERDEZERO);
 						return id;}
 				}	
 			
@@ -74,6 +99,12 @@ public class DiskManager { //singleton
 	}
 	public static DiskManager getDiskManager() {
 		return diskManager; 
+	}
+
+
+	public void setDiskManager() {
+		diskManager = new DiskManager(); 
+		
 	}
 
 }

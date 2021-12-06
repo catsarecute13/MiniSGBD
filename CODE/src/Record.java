@@ -32,14 +32,14 @@ public class Record {
 	public void readFromBuffer(ByteBuffer buffer, int position) {
 		buffer.position(position); 
 		for(int i = 0; i< relation.nbColonnes; i++) {
-			if (relation.infoCol.get(i).typeCol.trim().toLowerCase().equals("integer")) {
+			if (relation.infoCol.get(i).typeCol.trim().toLowerCase().equals("int")) {
 				values[i] =buffer.getInt();
 			}
 			else if (relation.infoCol.get(i).typeCol.trim().toLowerCase().equals("float")) {
 				values[i] = buffer.getFloat();
 			}
-			else {
-				int length = Integer.valueOf(relation.infoCol.get(i).typeCol.substring(6)) * Character.BYTES +2; 
+			else { 
+				int length = Integer.valueOf(relation.infoCol.get(i).typeCol.substring(6))*Character.BYTES +2; 
 				byte [] tab = new byte[length]; 
 				buffer.get(tab, 0, length);
 				values[i]= new String(tab, StandardCharsets.UTF_16); 

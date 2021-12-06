@@ -1,12 +1,16 @@
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class dirtyTest {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		String s = "6"; 
-		Object i = 6;  
-		System.out.println(((String)i).equals(s)); 
+		ByteBuffer buffer = ByteBuffer.allocate(DBParams.pageSize);
+		for(int i =0; i<10; i++) {
+			PageId id = DiskManager.AllocPage();
+			System.out.println(id);
+			DiskManager.writePage(id, buffer);
+		}
+		
 	}
 
 }

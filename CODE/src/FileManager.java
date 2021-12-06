@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
@@ -42,9 +43,10 @@ public class FileManager{
         return nouvPage;
     }
 
-    public PageId addDataPage(RelationInfo relInfo) throws Exception{ //on peut considerer -1 0 comme un nullPointerException
+    public PageId addDataPage(RelationInfo relInfo){ //on peut considerer -1 0 comme un nullPointerException
         PageId pidFactice = new PageId(-1, 0); 
     	PageId nouvPage=DiskManager.AllocPage(); //	ID de la nouvelleDataPage 
+    	System.out.println("id alloc page : "+nouvPage);
         PageId idPrevious=relInfo.headerPageId; //Le precedent de la nouvelle dataPage sera headerPageID parce qu'on
         										//ajoute au debut
         ByteBuffer headerPage=BufferManager.getBufferManager().getpage(idPrevious); //on recupere le buffer de HeaderPage
@@ -68,19 +70,23 @@ public class FileManager{
         //System.out.println("taille buffer page : "+ dataPage.capacity()); 
         // System.out.println("Position 0 dans byteMap: "+ Integer.BYTES*4); 
         //System.out.println("Nombre de slot (taille byteMap) : "+ relInfo.slotCount); 
+        dataPage.position(Integer.BYTES*4); 
         dataPage.put(new byte[relInfo.slotCount], 0,  relInfo.slotCount); //On initialise la bytemap a 0
         BufferManager.getBufferManager().freePage(nouvPage, true);
         return nouvPage;
     }
 
-    public PageId getFreeDataPageId(RelationInfo relInfo) throws Exception{
+    public PageId getFreeDataPageId(RelationInfo relInfo) {
     	PageId pIdFactice=new PageId(-1,0);
         PageId header=relInfo.headerPageId;
+        System.out.println("headerPid:" +header);
         ByteBuffer headerPage=BufferManager.getBufferManager().getpage(header);
         PageId idPage=readPageIdFromPageBuffer(headerPage,true);//pages non pleines == pages suivantes
+        System.out.println("pid lu: "+ idPage);
         BufferManager.getBufferManager().freePage(header, false);
-        if (idPage.equals(pIdFactice)){ //Il n'y a pas de pages 
-            return addDataPage(relInfo); //On ajoute une page 
+        if (idPage.equals(pIdFactice)){ //Il n'y a pas de pages
+				return addDataPage(relInfo);
+				//On ajoute une page 
         } else{
             return idPage; //sinon on renvoie la page existante
         }
@@ -100,6 +106,7 @@ public class FileManager{
                 }
             }
         } 
+        System.out.println("J'ecris dans le slot "+slotIdx);
         //On aura jamais nbLibre ==0 car quand c'est egal a 1, on ecrit le record puis on deplace directement 
         //la page dans les pages pleines 
         if (nbLibre ==1){
@@ -109,30 +116,37 @@ public class FileManager{
         
         	//JUSQUE LA TOUT VA BIEN 
         	
-        	//On deplace la page vers les pages pleines
-        	//Je recupere headerPage 
-        	ByteBuffer headerPage = BufferManager.getBufferManager().getpage(relInfo.headerPageId); 
         	
         	//Suppression de la pages des pages non pleines 
         	PageId pidSuivPage = readPageIdFromPageBuffer(page, true);
-        	ByteBuffer buffPidSuivPage = BufferManager.getBufferManager().getpage(pidSuivPage); 
         	PageId pidPrePage = readPageIdFromPageBuffer(page, false); 
-        	ByteBuffer buffPidPrePage = BufferManager.getBufferManager().getpage(pidPrePage); 
         	
         	if(!pidSuivPage.equals(pIdFactice)) {//Si ce n'est pas la derniere page
+        		ByteBuffer buffPidSuivPage = BufferManager.getBufferManager().getpage(pidSuivPage); 
         		writePageIdToPageBuffer(pidPrePage, buffPidSuivPage,false);  //update du pre dans la pageSuiv
+        		BufferManager.getBufferManager().freePage(pidSuivPage, true);
         	}
+        	
+        	ByteBuffer buffPidPrePage = BufferManager.getBufferManager().getpage(pidPrePage); 
         	writePageIdToPageBuffer(pidSuivPage, buffPidPrePage, true); 
+    		BufferManager.getBufferManager().freePage(pidPrePage, true);
+
         	
         	//INSERTION DANS LES PAGES PLEINES
+        	//On deplace la page vers les pages pleines
+        	//Je recupere headerPage 
+        	ByteBuffer headerPage = BufferManager.getBufferManager().getpage(relInfo.headerPageId); 
         	PageId pidPrecedent = readPageIdFromPageBuffer(headerPage, false); 
         	writePageIdToPageBuffer(relInfo.headerPageId, page, false); //update precedant de page
         	writePageIdToPageBuffer(pageId, headerPage, false); //update precedant dans buffer
         	writePageIdToPageBuffer(pidPrecedent, page, true); //update suivant dans la page
+    		BufferManager.getBufferManager().freePage(relInfo.headerPageId, true);
+
         	if(!pidPrecedent.equals(pIdFactice)){ //S'il existe une page pleine alors avant insertion
         		ByteBuffer pagePleine = BufferManager.getBufferManager().getpage(pidPrecedent); 
         		writePageIdToPageBuffer(pageId, pagePleine, false); //update precedant dans la pagePleine
-        		}
+        		BufferManager.getBufferManager().freePage(pidPrecedent, true);
+        	}
         	
         	//On libere la page aupres de BufferManager avec dirty 
         	BufferManager.getBufferManager().freePage(pageId, true);
@@ -146,7 +160,6 @@ public class FileManager{
         	BufferManager.getBufferManager().freePage(pageId, true);
         	return new Rid(pageId, slotIdx); 
         }
-   
 
     }
     
@@ -167,14 +180,14 @@ public class FileManager{
     }
     
     public Rid InsertRecordIntoRelation(RelationInfo relInfo, Record record) {
-    	//On recupere le headerFile
-    	ByteBuffer headerPage = BufferManager.getBufferManager().getpage(relInfo.headerPageId); 
     	//On ecrit le record dans le premier slot libre 
-    	return writeRecordToDataPage(relInfo, record, new PageId(headerPage.getInt(), headerPage.getInt()));
+    	PageId prochainLibre = this.getFreeDataPageId(relInfo);
+    	//System.out.println("getFreeDataPageId :"+ prochainLibre);
+    	return writeRecordToDataPage(relInfo, record, prochainLibre);
     }
     
     public Record [] getAllRecords(RelationInfo relInfo) {
-    	PageId pidFactice = new PageId(-1, -1); 
+    	PageId pidFactice = new PageId(-1, 0); 
     	ArrayList<Record> allRecords = new ArrayList<Record>(); //la liste ou on va mettre tous les records 
     	//On recupere le headerFile
     	ByteBuffer headerPage = BufferManager.getBufferManager().getpage(relInfo.headerPageId); 
@@ -184,27 +197,40 @@ public class FileManager{
     	PageId pageId = readPageIdFromPageBuffer(headerPage, false);
     	while(!pageId.equals(pidFactice)) {
     		ByteBuffer bufferPage = BufferManager.getBufferManager().getpage(pageId); 
-        	bufferPage.position(Integer.BYTES*4); 
-    	for(int i = 0; i< relInfo.slotCount; i++) { //ici on est dans les pages pleines, pas la peine de verifier la bytemap
-    		byte tmp = bufferPage.get(Integer.BYTES*4 +i); 
-    				tmpRecord.readFromBuffer(bufferPage, Integer.BYTES*4 +relInfo.slotCount + i*relInfo.recordSize); 
-        			allRecords.add(tmpRecord);
-        		}
-    	pageId = readPageIdFromPageBuffer(bufferPage, true); 
+        	//bufferPage.position(Integer.BYTES*4); 
+	    	for(int i = 0; i< relInfo.slotCount; i++) { //ici on est dans les pages pleines, pas la peine de verifier la bytemap
+	    		//byte tmp = bufferPage.get(Integer.BYTES*4 +i); 
+	    				tmpRecord.readFromBuffer(bufferPage, Integer.BYTES*4 +relInfo.slotCount + i*relInfo.recordSize); 
+	        			allRecords.add(tmpRecord);
+	        }
+	    	pageId = readPageIdFromPageBuffer(bufferPage, true); 
+	    	BufferManager.getBufferManager().freePage(pageId, false);
     	}
     	//On recupere les record des pages non pleines 
     	pageId = readPageIdFromPageBuffer(headerPage, true); 
+    	BufferManager.getBufferManager().freePage(relInfo.headerPageId, false);
     	while(!pageId.equals(pidFactice)) {
+    		System.out.println("Pid page non pleine actuelle : " + pageId + "ET SLOT COUNT " + relInfo.slotCount);
+    		try {
+				System.in.read();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		System.out.println(BufferManager.getBufferManager());
     		ByteBuffer bufferPage = BufferManager.getBufferManager().getpage(pageId); 
     		bufferPage.position(Integer.BYTES*4); 
-    		for(int i = 0; i< relInfo.nbColonnes; i++) {
+    		for(int i = 0; i< relInfo.slotCount; i++) {
         		byte tmp = bufferPage.get(Integer.BYTES*4 +i); 
         		if(tmp==(byte)1) { //On verifie la bytemap parce qu'on ne prend que les slots remplis 
         			tmpRecord.readFromBuffer(bufferPage, Integer.BYTES*4 +relInfo.slotCount + i*relInfo.recordSize); 
             		allRecords.add(tmpRecord); 
         		}
     		}
+	    	pageId = readPageIdFromPageBuffer(bufferPage, true); 
+	    	BufferManager.getBufferManager().freePage(pageId, false);
     	}
+    	
     return allRecords.toArray(Record []::new); //VERFIER QUE CA MARCHE BIEN 
     }
     
@@ -212,4 +238,9 @@ public class FileManager{
     public static FileManager getFileManager() {
     	return fileManager; 
     }
+
+	public void setFileManager() {
+		fileManager= new FileManager();
+		
+	}
 }

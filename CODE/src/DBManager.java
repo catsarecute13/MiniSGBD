@@ -4,7 +4,7 @@ public class DBManager {
     private static DBManager DBManager = new DBManager();
 
     public void Init(){
-        Catalog.getCatalog().Init();
+        Catalog.Init();
     }
 
     public void Finish(){

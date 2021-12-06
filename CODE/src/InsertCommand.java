@@ -1,4 +1,5 @@
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer; 
@@ -35,20 +36,21 @@ public class InsertCommand{
 
     public void Execute(){
         //comparer les types entre infoCol(RelationInfo) et le tableau l.
-        ByteBuffer buff=ByteBuffer.allocate(relation.recordSize); //FAUX ALLOCATE
+        ByteBuffer buff=ByteBuffer.allocate(relation.recordSize); 
         int taille = valuesRecord.size(); 
         for(int i=0;i<taille;i++){
-            if (relation.infoCol.get(i).equals("int")){
+            if (relation.infoCol.get(i).typeCol.equals("int")){
                 buff.putInt(Integer.parseInt(valuesRecord.get(i)));
             }
-            else if (relation.infoCol.get(i).equals("float")){
+            else if (relation.infoCol.get(i).typeCol.equals("float")){
                 buff.putFloat(Float.parseFloat(valuesRecord.get(i)));
             }
             else {
-                buff.put(valuesRecord.get(i).getBytes());
+                buff.put(valuesRecord.get(i).getBytes(StandardCharsets.UTF_16));
             }
         }
         //mettre dans record
         record.readFromBuffer(buff,0);
+        FileManager.getFileManager().InsertRecordIntoRelation(relation, record);
     }
 }

@@ -10,6 +10,8 @@ public class BufferManager {
 	}
 	
 	public ByteBuffer getpage(PageId id) {
+		if (id.equals(new PageId(0,0)))
+			System.out.println("\tGETPAGE("+id+")");
 		for(int i=0; i< DBParams.frameCount; i++) {
 			if(pool[i]==null) {
 				//System.out.println("AAAH");
@@ -68,19 +70,33 @@ public class BufferManager {
 	
 	public void FlushAll(){
         for (Frame element:pool){
-            if (element.dirty) {
+            if (element != null && element.dirty) {
                 DiskManager.writePage(element.id, ByteBuffer.wrap(element.buffer)); 
 
             }
             
         }
-        for(Frame element :pool) { 
-        	element = null;  //Pas sure, a revoir
-        } 
-    }
+	}
 
 	static public BufferManager getBufferManager() {
 		return bufferManager; 
+	}
+
+	public void resetBufferManager() {
+		pool = new Frame [DBParams.frameCount];
+		File_FrameMRU = new ListeChainee();
+		
+	}
+	
+	public String toString() {
+		StringBuffer buffer = new StringBuffer("[");
+		for(int i=0; i<DBParams.frameCount; i++) {
+			if(pool[i] == null)
+				buffer.append("VIDE, ");
+			else 
+				buffer.append(pool[i].id).append(" pin_count=").append(pool[i].pin_count).append(", ");
+		}
+		return buffer.append("]").toString();
 	}
 	
 }

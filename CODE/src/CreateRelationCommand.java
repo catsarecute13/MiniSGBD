@@ -42,15 +42,10 @@ public class CreateRelationCommand {
 	//methode
 	public void Execute() throws Exception {
 		PageId pageId= FileManager.getFileManager().createHeaderPage();
-		ColInfo colinf= new ColInfo();
 		ArrayList<ColInfo> tab= new ArrayList<ColInfo>();
 		
 		for(int i=0; i<nomColonne.size(); i++) {
-			colinf.nomCol= nomColonne.get(i);
-			colinf.typeCol= typeColonne.get(i);
-			System.out.println(colinf.nomCol);
-			System.out.println(colinf.typeCol);
-
+			ColInfo colinf= new ColInfo(nomColonne.get(i), typeColonne.get(i));
 			tab.add(colinf);
 		}
 		nbColonnes=tab.size();

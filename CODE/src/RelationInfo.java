@@ -14,7 +14,7 @@ public class RelationInfo {
 		this.headerPageId=headerPageId;
 		recordSize=0;
 		for(int i=0;i<nbColonnes;i++) {
-			if (infoCol.get(i).typeCol.trim().toLowerCase().compareTo("integer")==0) {
+			if (infoCol.get(i).typeCol.trim().toLowerCase().compareTo("int")==0) { //ou integer
 				recordSize+=Integer.BYTES;
 			}
 			else if (infoCol.get(i).typeCol.trim().toLowerCase().compareTo("float")==0) {
