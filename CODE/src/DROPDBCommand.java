@@ -21,12 +21,12 @@ public class DROPDBCommand{
     	File [] dirList = dir.listFiles();
     	if (dirList != null){
     		for(File file : dirList) {
-    			System.out.println(file.getName());
+    			//System.out.println(file.getName());
         		if(file.isDirectory()) {
         			cleanDirectory(file.getPath()); //verfier que ce n'est pas la methode getAbsolutePath qu'on doit utilisers
         		}
         		else {
-        			System.out.println(file.delete()); 
+        			file.delete(); 
         		}
         	}
     	}

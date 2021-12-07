@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class FileManager{
 	private static FileManager fileManager= new FileManager(); 
@@ -20,7 +21,7 @@ public class FileManager{
 	}
 	
 	public void writePageIdToPageBuffer(PageId id, ByteBuffer buffer, boolean first) {
-		System.out.println(buffer);
+		//System.out.println(buffer);
 		if(!first) {
 			//System.out.println(buffer); 
 			buffer.position(0); 
@@ -98,7 +99,8 @@ public class FileManager{
     }
 
     public Rid writeRecordToDataPage(RelationInfo relInfo, Record record, PageId pageId){
-     	System.out.println(BufferManager.getBufferManager());
+     	//System.out.println(BufferManager.getBufferManager());
+     	//System.out.println("WriteRecordToDataPageFile : "+BufferManager.getBufferManager().File_FrameMRU);
     	PageId pIdFactice=new PageId(-1,0);
         ByteBuffer page=BufferManager.getBufferManager().getpage(pageId); //DATAPAGES
         int nbSlots=relInfo.slotCount;
@@ -116,7 +118,7 @@ public class FileManager{
         //On aura jamais nbLibre ==0 car quand c'est egal a 1, on ecrit le record puis on deplace directement 
         //la page dans les pages pleines 
         if (nbLibre ==1){
-        	System.out.println(BufferManager.getBufferManager());
+        	//System.out.println(BufferManager.getBufferManager());
         	
         	//On ecrit le record dans le slot libre 
         	record.writeToBuffer(page, Integer.BYTES*4 + nbSlots + record.relation.recordSize*slotIdx);
@@ -127,9 +129,7 @@ public class FileManager{
         	
         	//Suppression de la pages des pages non pleines 
         	PageId pidSuivPage = readPageIdFromPageBuffer(page, true);
-        	System.out.println("pid suivant "+ pidSuivPage);
         	PageId pidPrePage = readPageIdFromPageBuffer(page, false); 
-        	System.out.println("pidPre"+ pidPrePage);
         	
         	if(!pidSuivPage.equals(pIdFactice)) {//Si ce n'est pas la derniere page
         		ByteBuffer buffPidSuivPage = BufferManager.getBufferManager().getpage(pidSuivPage); 
@@ -160,7 +160,7 @@ public class FileManager{
         	
         	//On libere la page aupres de BufferManager avec dirty 
         	BufferManager.getBufferManager().freePage(pageId, true);
-        	System.out.println(BufferManager.getBufferManager());
+        	//System.out.println(BufferManager.getBufferManager());
         	return new Rid(pageId, slotIdx); 
         }
         else  {
@@ -199,45 +199,59 @@ public class FileManager{
     }
     
     public Record [] getAllRecords(RelationInfo relInfo) {
+    	//System.out.println("Debut de getAllRecords "+BufferManager.getBufferManager());
     	PageId pidFactice = new PageId(-1, 0); 
     	ArrayList<Record> allRecords = new ArrayList<Record>(); //la liste ou on va mettre tous les records 
     	//On recupere le headerFile
     	ByteBuffer headerPage = BufferManager.getBufferManager().getpage(relInfo.headerPageId); 
+    	//System.out.println("get"+relInfo.headerPageId);
     	//On getRecords de toutes les pages
     		//On get les record des pages pleines, puis les records des pages nonPleines 
     	Record tmpRecord = new Record(relInfo);
     	PageId pageId = readPageIdFromPageBuffer(headerPage, false);
     	while(!pageId.equals(pidFactice)) {
+    		
     		ByteBuffer bufferPage = BufferManager.getBufferManager().getpage(pageId); 
+    		//System.out.println("get"+pageId);
         	//bufferPage.position(Integer.BYTES*4); 
 	    	for(int i = 0; i< relInfo.slotCount; i++) { //ici on est dans les pages pleines, pas la peine de verifier la bytemap
 	    		//byte tmp = bufferPage.get(Integer.BYTES*4 +i); 
-	    			tmpRecord.readFromBuffer(bufferPage, Integer.BYTES*4 +relInfo.slotCount + i*relInfo.recordSize); 
-	        		allRecords.add(tmpRecord);
+	    		tmpRecord = new Record(relInfo);	
+	    		tmpRecord.readFromBuffer(bufferPage, Integer.BYTES*4 +relInfo.slotCount + i*relInfo.recordSize); 
+	    		//System.out.println("Dans les pages pleines : " + tmpRecord);
+    			allRecords.add(tmpRecord);
 	        }
-	    	pageId = readPageIdFromPageBuffer(bufferPage, true); 
 	    	BufferManager.getBufferManager().freePage(pageId, false);
+	    	pageId = readPageIdFromPageBuffer(bufferPage, true); 
+	    	//System.out.println("free"+pageId);
     	}
     	//On recupere les record des pages non pleines 
     	pageId = readPageIdFromPageBuffer(headerPage, true); 
     	BufferManager.getBufferManager().freePage(relInfo.headerPageId, false);
+    	//System.out.println("free"+relInfo.headerPageId);
     	while(!pageId.equals(pidFactice)) {
     		//System.out.println("Pid page non pleine actuelle : " + pageId + "ET SLOT COUNT " + relInfo.slotCount);
     		//System.in.read()
     		//System.out.println(BufferManager.getBufferManager());
-    		ByteBuffer bufferPage = BufferManager.getBufferManager().getpage(pageId); 
+    		ByteBuffer bufferPage = BufferManager.getBufferManager().getpage(pageId);
+    		//System.out.println("get"+pageId);
     		bufferPage.position(Integer.BYTES*4); 
     		for(int i = 0; i< relInfo.slotCount; i++) {
+    			tmpRecord = new Record(relInfo);
         		byte tmp = bufferPage.get(Integer.BYTES*4 +i); 
         		if(tmp==(byte)1) { //On verifie la bytemap parce qu'on ne prend que les slots remplis 
         			tmpRecord.readFromBuffer(bufferPage, Integer.BYTES*4 +relInfo.slotCount + i*relInfo.recordSize); 
-            		allRecords.add(tmpRecord); 
+        			System.out.println("Dans les pages pas pleines : " + tmpRecord);
+        			allRecords.add(tmpRecord); 
         		}
     		}
+    		BufferManager.getBufferManager().freePage(pageId, false);
 	    	pageId = readPageIdFromPageBuffer(bufferPage, true); 
-	    	BufferManager.getBufferManager().freePage(pageId, false);
+	    	//System.out.println("free"+pageId);
     	}
-    	
+    //System.out.println(allRecords);
+    //System.out.println("******************************************************************");
+    //System.out.println(Arrays.toString(allRecords.toArray(Record []::new)));
     return allRecords.toArray(Record []::new); //VERFIER QUE CA MARCHE BIEN 
     }
     

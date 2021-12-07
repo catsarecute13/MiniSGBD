@@ -84,13 +84,13 @@ public class Record {
 		for(int i = 0; i <r2.relation.nbColonnes; i++) {
 			Object tmp= r2.values[i]; 
 			if(tmp instanceof Integer) {
-				sb.append(((Integer) tmp).intValue()).append(",");
+				sb.append(((Integer) tmp).intValue()).append(" ; ");
 				}
 			else if(tmp instanceof Float) {
-				sb.append(((Float)tmp).floatValue()).append(","); 
+				sb.append(((Float)tmp).floatValue()).append(" ; "); 
 			}
 			else {
-				sb.append((String)tmp).append(","); 
+				sb.append((String)tmp).append(" ; "); 
 			}
 		}
 		return sb.deleteCharAt(sb.length()-1).append(")").toString();

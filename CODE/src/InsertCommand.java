@@ -51,7 +51,7 @@ public class InsertCommand{
             else {
                 buff.put(valuesRecord.get(i).getBytes(StandardCharsets.UTF_16));
             }
-        }
+        } 
         //mettre dans record
         record.readFromBuffer(buff,0);
         FileManager.getFileManager().InsertRecordIntoRelation(relation, record);

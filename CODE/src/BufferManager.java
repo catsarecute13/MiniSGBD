@@ -10,7 +10,6 @@ public class BufferManager {
 	}
 	
 	public ByteBuffer getpage(PageId id) {
-		int g = 0;
 		for(int i=0; i< DBParams.frameCount; i++) {
 			if(pool[i]==null) {
 				//System.out.println("AAAH");
@@ -41,26 +40,29 @@ public class BufferManager {
 				File_FrameMRU.frameSuiv.supprimer();
 				return ByteBuffer.wrap(tmp.buffer, 0, tmp.buffer.length); 
 		}
-		System.out.println("va retourner null");
+		//System.out.println(this);
+		//System.out.println("va retourner null + pageId: " + id);
 		return null;
 		 
 	}
 	
 	void freePage(PageId id,boolean valdirty) {
-		int g = 0;
 		for(int i = 0; i<DBParams.frameCount; i++) {
 			//System.out.println("pool["+i+"]" + pool[i]); 
 			//System.out.println("id "+ pool[i].id); 
 			//System.out.println("pageId donne en param"+ id); 
 			if(pool[i].id.equals(id)) {
 				if(pool[i].dirty != true) {
-					pool[i].dirty=valdirty; 
+					pool[i].dirty=valdirty;
 				}
 				pool[i].pin_count--;
 				if (pool[i].pin_count== 0) {
+					//System.out.println("free :" + id +"index: " + i);
 					ListeChainee tmp = new ListeChainee(i);
 					pool[i].chaine = tmp; 
 					File_FrameMRU.ajouter(tmp);
+					//System.out.println(File_FrameMRU.frameSuiv); 
+					//System.out.println(this);
 				}
 				break; 
 			}
@@ -79,7 +81,7 @@ public class BufferManager {
 	}
 
 	static public BufferManager getBufferManager() {
-		return bufferManager; 
+		return bufferManager;
 	}
 
 	public void resetBufferManager() {

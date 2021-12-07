@@ -14,14 +14,14 @@ public class TestCommandes {
 				System.out.println(Catalog.getCatalog().relationTab.get(i).toString()); 
 			}*/
 			
-			InsertCommand insert = new InsertCommand("INSERT INTO R RECORD (1,2.0,0123456789)");
-			for (int i=0;i<300;i++) 
+			for (int i=0;i<300;i++) {
+				InsertCommand insert = new InsertCommand("INSERT INTO R RECORD ("+i+",2.0,0123456789)");
 				insert.Execute();
+			}
 			
 			SelectMonoCommand select = new SelectMonoCommand("SELECTMONO * FROM R"); 
 			select.Execute();
-			drop = new DROPDBCommand("DROPDB");
-			drop.Execute();
+			
 			
 			
 		}catch (Exception e) {

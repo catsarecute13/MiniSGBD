@@ -3,16 +3,17 @@ public class Frame {
 	public int pin_count; 
 	public boolean dirty; 
 	public byte [] buffer; 
-	public int temps; 
 	public ListeChainee chaine; 
 	
 	public Frame (PageId id) {
 		this.id = id; 
 		pin_count = 0; 
 		dirty = false;
-		buffer = new byte[4096];
-		temps = 0;
+		buffer = new byte[DBParams.pageSize];
 		chaine = null; 
 	}
-
+	
+	public String toString() {
+		return "(id: )" +id+ "pin_count:"+pin_count; 
+	}
 }

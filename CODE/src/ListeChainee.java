@@ -22,8 +22,15 @@ public class ListeChainee {
 	}
 	
 	public void ajouter(ListeChainee frame) {
-		frame.frameSuiv = null; 
+		frame.frameSuiv = this.frameSuiv; 
 		frame.framePre = this; 
-		frameSuiv = frame; 
+		frameSuiv = frame;
+		if(frame.frameSuiv !=null) {
+			frame.frameSuiv.framePre=frame; 			
+		}
+	}
+	
+	public String toString() {
+		return "(index :"+ index+" | frameSuiv :"+ (frameSuiv == null ? "null" : frameSuiv.toString()+")");
 	}
 }

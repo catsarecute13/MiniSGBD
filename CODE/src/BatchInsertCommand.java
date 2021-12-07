@@ -22,16 +22,28 @@ public class BatchInsertCommand{
     }
 
     //il faut ajouter un try catch
-    public void Execute() throws Exception{
-        File file = new File(DBParams.projet+"\\"+nomFichier);    //Ouverture
-        FileReader fileReader = new FileReader(file);                   //du fichier
+    public void Execute() {
+        File file = new File(DBParams.projet+"\\"+nomFichier);    //Ouverture du fichier
+        FileReader fileReader;
+		try {
+			fileReader = new FileReader(file);
+		} catch (FileNotFoundException e) {
+			System.out.println("Echec de la commande BatchInsert, le fichier"+nomFichier+" n'existe pas");
+			return;
+		}                  
         BufferedReader bufferedReader = new BufferedReader(fileReader); //CSV
         String line;
-        while ((line = bufferedReader.readLine()) != null) { //On lit ligne par ligne
-            String chaine="INSERT INTO "+nomRelation+" RECORD ("+line+")"; // on crée une chaine de la forme "INSERT INTO nomRelation RECORD (val1,val2, … ,valn)" 
-            System.out.println(line);
-            InsertCommand insert=new InsertCommand(chaine); //insérer la ligne
-            insert.Execute(); //Executer
-        }
+        try {
+			while ((line = bufferedReader.readLine()) != null) { //On lit ligne par ligne
+			    String chaine="INSERT INTO "+nomRelation+" RECORD ("+line+")"; // on crée une chaine de la forme "INSERT INTO nomRelation RECORD (val1,val2, … ,valn)" 
+			    //System.out.println(line);
+			    //System.out.println(chaine);
+			    //System.out.println("***********************");
+			    InsertCommand insert=new InsertCommand(chaine); //insérer la ligne
+			    insert.Execute(); //Executer
+			}
+		} catch (IOException e) {
+			System.out.println("Echec de la commande BatchInsert, probl�me de lecture dans le fichier");
+		}
     }
 }

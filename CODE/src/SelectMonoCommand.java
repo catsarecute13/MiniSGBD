@@ -20,8 +20,8 @@ public class SelectMonoCommand {
 		StringTokenizer st = new StringTokenizer(ch); 
 		//ArrayList<String> op = new ArrayList<String>(); 
 		st.nextToken(); //SELECTMONO 
-		st.nextToken(); 
-		st.nextToken(); 
+		st.nextToken(); //*
+		st.nextToken(); //FROM
 		nomRelation = st.nextToken(); 
 		relation = Catalog.getCatalog().getRelation(nomRelation); 
 		String [] nomOp = new String[2];
@@ -65,12 +65,10 @@ public class SelectMonoCommand {
 	public void Execute() {
 		ArrayList<Record> res =new ArrayList<Record>(Arrays.asList(FileManager.getFileManager().getAllRecords(relation))); 
 		if(!verifWhere) {
-			int i=0; 
 			for(Record r: res) {
-				System.out.println(i + " :"+r);
-				i++;
+				System.out.println(r);
 			}
-			System.out.println("Total record :"+res.size());
+			System.out.println("Total records :"+res.size());
 		}
 		else {
 			//verifier criteres des condition <1 ou >20 
@@ -192,5 +190,9 @@ public class SelectMonoCommand {
 	
 			}
 		}
+	}
+	
+	public String toString() {
+		return "Nom relation: "+ nomRelation+ "\nWhere :" + (verifWhere? "Oui" : "Non")+"\n"+op+ "\n"+ conditions;
 	}
 }
