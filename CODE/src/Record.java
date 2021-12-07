@@ -93,6 +93,6 @@ public class Record {
 				sb.append((String)tmp).append(","); 
 			}
 		}
-		return sb.deleteCharAt(buffer.length()-1).append(")").toString();
+		return sb.deleteCharAt(sb.length()-1).append(")").toString();
 	}
 }
