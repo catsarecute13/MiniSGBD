@@ -65,8 +65,10 @@ public class SelectMonoCommand {
 	public void Execute() {
 		ArrayList<Record> res =new ArrayList<Record>(Arrays.asList(FileManager.getFileManager().getAllRecords(relation))); 
 		if(!verifWhere) {
+			int i=0; 
 			for(Record r: res) {
-				System.out.println(r);
+				System.out.println(i + " :"+r);
+				i++;
 			}
 			System.out.println("Total record :"+res.size());
 		}

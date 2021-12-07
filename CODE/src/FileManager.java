@@ -20,6 +20,7 @@ public class FileManager{
 	}
 	
 	public void writePageIdToPageBuffer(PageId id, ByteBuffer buffer, boolean first) {
+		System.out.println(buffer);
 		if(!first) {
 			//System.out.println(buffer); 
 			buffer.position(0); 
@@ -97,8 +98,9 @@ public class FileManager{
     }
 
     public Rid writeRecordToDataPage(RelationInfo relInfo, Record record, PageId pageId){
+     	System.out.println(BufferManager.getBufferManager());
     	PageId pIdFactice=new PageId(-1,0);
-        ByteBuffer page=BufferManager.getBufferManager().getpage(pageId);
+        ByteBuffer page=BufferManager.getBufferManager().getpage(pageId); //DATAPAGES
         int nbSlots=relInfo.slotCount;
         int nbLibre=0;
         int slotIdx=-1;
@@ -114,6 +116,8 @@ public class FileManager{
         //On aura jamais nbLibre ==0 car quand c'est egal a 1, on ecrit le record puis on deplace directement 
         //la page dans les pages pleines 
         if (nbLibre ==1){
+        	System.out.println(BufferManager.getBufferManager());
+        	
         	//On ecrit le record dans le slot libre 
         	record.writeToBuffer(page, Integer.BYTES*4 + nbSlots + record.relation.recordSize*slotIdx);
         	page.put(Integer.BYTES*4 +slotIdx, (byte)1); //on update la bytemap
@@ -123,7 +127,9 @@ public class FileManager{
         	
         	//Suppression de la pages des pages non pleines 
         	PageId pidSuivPage = readPageIdFromPageBuffer(page, true);
+        	System.out.println("pid suivant "+ pidSuivPage);
         	PageId pidPrePage = readPageIdFromPageBuffer(page, false); 
+        	System.out.println("pidPre"+ pidPrePage);
         	
         	if(!pidSuivPage.equals(pIdFactice)) {//Si ce n'est pas la derniere page
         		ByteBuffer buffPidSuivPage = BufferManager.getBufferManager().getpage(pidSuivPage); 
@@ -154,6 +160,7 @@ public class FileManager{
         	
         	//On libere la page aupres de BufferManager avec dirty 
         	BufferManager.getBufferManager().freePage(pageId, true);
+        	System.out.println(BufferManager.getBufferManager());
         	return new Rid(pageId, slotIdx); 
         }
         else  {
@@ -180,6 +187,7 @@ public class FileManager{
     		}
     		
     	}
+    	BufferManager.getBufferManager().freePage(pageId, false);
     	return recordList; 
     }
     
