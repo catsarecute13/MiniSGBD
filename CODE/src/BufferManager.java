@@ -10,8 +10,6 @@ public class BufferManager {
 	}
 	
 	public ByteBuffer getpage(PageId id) {
-		if (id.equals(new PageId(0,0)))
-			System.out.println("\tGETPAGE("+id+")");
 		for(int i=0; i< DBParams.frameCount; i++) {
 			if(pool[i]==null) {
 				//System.out.println("AAAH");

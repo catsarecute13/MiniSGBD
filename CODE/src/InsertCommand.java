@@ -28,10 +28,13 @@ public class InsertCommand{
         for(RelationInfo e:Catalog.getCatalog().relationTab){
             if (e.nomRelation.equals(nomRelation)){
                 relation=e;
+                //System.out.println("relation :" +relation + "e : "+ e);
             }
         }
         //creer un record
+        //System.out.println(relation); 
         record=new Record(relation);
+        
     }
 
     public void Execute(){
