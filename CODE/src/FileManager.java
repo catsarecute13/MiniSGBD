@@ -241,7 +241,7 @@ public class FileManager{
         		byte tmp = bufferPage.get(Integer.BYTES*4 +i); 
         		if(tmp==(byte)1) { //On verifie la bytemap parce qu'on ne prend que les slots remplis 
         			tmpRecord.readFromBuffer(bufferPage, Integer.BYTES*4 +relInfo.slotCount + i*relInfo.recordSize); 
-        			System.out.println("Dans les pages pas pleines : " + tmpRecord);
+        			//System.out.println("Dans les pages pas pleines : " + tmpRecord);
         			allRecords.add(tmpRecord); 
         		}
     		}

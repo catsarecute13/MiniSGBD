@@ -19,6 +19,6 @@ public class ColInfo {
 	}
 	
 	public String toString() {
-		return "nom col:"+ nomCol +"type col :"+typeCol; 
+		return "nom col:"+ nomCol +" type col :"+typeCol; 
 	}
 }

@@ -25,10 +25,10 @@ public class TestSelectMonoWhere {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		SelectMonoCommand select = new SelectMonoCommand("SELECTMONO * FROM S WHERE B=19"); 
-		System.out.println(select);
-		System.out.println("****Exécution****");
+		SelectMonoCommand select = new SelectMonoCommand("SELECTMONO * FROM S WHERE B=19");// AND A=KJ AND C>=ABCD AND C<>CSMA"); 
 		select.Execute();
+		SelectMonoCommand select2 = new SelectMonoCommand("SELECTMONO * FROM S WHERE C=Nati");// AND A=KJ AND C>=ABCD AND C<>CSMA"); 
+		select2.Execute();
 		
 
 	}
