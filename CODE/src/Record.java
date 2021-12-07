@@ -3,11 +3,14 @@ import java.nio.charset.StandardCharsets;
 public class Record {
 	public RelationInfo relation; 
 	public Object [] values; 
+	public Rid rid;
+
 	
 	
 	public Record(RelationInfo rel) { 
 		relation = rel; 
 		values = new Object [relation.nbColonnes]; 
+		rid = new Rid(new PageId(-1,0), -1); 
 	}
 	
 	/**

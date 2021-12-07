@@ -41,7 +41,7 @@ public class BufferManager {
 				return ByteBuffer.wrap(tmp.buffer, 0, tmp.buffer.length); 
 		}
 		//System.out.println(this);
-		//System.out.println("va retourner null + pageId: " + id);
+		System.out.println("va retourner null + pageId: " + id);
 		return null;
 		 
 	}
