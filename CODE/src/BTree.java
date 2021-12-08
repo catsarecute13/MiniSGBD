@@ -1,7 +1,7 @@
 // Inserting a key on a B-tree in Java 
-
+import java.util.ArrayList;
+import java.util.Stack;
 public class BTree {
-
     private int T;
   
     // Node Creation
@@ -11,14 +11,24 @@ public class BTree {
       Record res[]=new Record[2*T-1];
       Node child[] = new Node[2 * T];
       boolean leaf = true;
-  
-      public Record Find(int k) {
+      
+      public void Find(int k, ArrayList<Record> res) {
         for (int i = 0; i < this.n; i++) {
           if (this.key[i] == k) {
-            return res[i];
+            res.add(this.res[i]);
+          }
+          if (this.key[i]>k) {
+            break;
           }
         }
-        return null;
+        if (!this.leaf) {
+          for(int i=0;i<this.n+1;i++){
+            if (this.child[i].key[0]>k){
+              break;
+            }
+            this.child[i].Find(k,res);
+          }
+        }
       };
     }
   
@@ -30,6 +40,16 @@ public class BTree {
     }
   
     private Node root;
+
+    public ArrayList<Record> search(int key){
+      if (root == null){
+        return null;
+      }
+      ArrayList<Record> res=new ArrayList<Record>();
+      root.Find(key, res);
+      return res;
+
+    }
   
     // split
     private void split(Node x, int pos, Node y) {
@@ -61,7 +81,7 @@ public class BTree {
     }
   
     // insert key
-    public void insert(final int key) {
+    public void insert(final int key, Record record) {
       Node r = root;
       if (r.n == 2 * T - 1) {
         Node s = new Node();
@@ -86,7 +106,7 @@ public class BTree {
           x.res[i + 1] = x.res[i];
         }
         x.key[i + 1] = k;
-        x.res[i + 1] = rec
+        x.res[i + 1] = rec;
         x.n = x.n + 1;
       } else {
         int i = 0;
@@ -122,17 +142,26 @@ public class BTree {
         }
       }
     }
-  
-    public static void main(String[] args) {
-      BTree b = new BTree(3);
-      b.insert(8);
-      b.insert(9);
-      b.insert(10);
-      b.insert(11);
-      b.insert(15);
-      b.insert(20);
-      b.insert(17);
-  
-      b.display();
+
+    public BTree Remove(int val){
+      BTree arb=new BTree(T);
+      Remove(root,val,arb);
+      return arb;
     }
-  }
+
+    public void Remove(Node x,int val,BTree arb){
+      if (x == null){
+        return;
+      }
+      for(int i=0;i<x.n;i++){
+        if (x.key[i]!=val){
+          arb.insert(x.key[i],x.res[i]);
+        }
+      }
+      if (!x.leaf) {
+        for(int i=0;i<x.n+1;i++){
+          Remove(x.child[i],val,arb);
+        }
+      }
+    }
+}
