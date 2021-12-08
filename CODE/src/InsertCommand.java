@@ -39,6 +39,7 @@ public class InsertCommand{
 
     public void Execute(){
         //comparer les types entre infoCol(RelationInfo) et le tableau l.
+        ArrayList<CreateIndexCommand> index=CreateIndexCommand.getIndex(nomRelation);
         ByteBuffer buff=ByteBuffer.allocate(relation.recordSize); 
         int taille = valuesRecord.size(); 
         for(int i=0;i<taille;i++){
@@ -54,6 +55,9 @@ public class InsertCommand{
         } 
         //mettre dans record
         record.readFromBuffer(buff,0);
+        for(CreateIndexCommand ind:index){
+            ind.Insert(record);
+        }
         FileManager.getFileManager().InsertRecordIntoRelation(relation, record);
     }
 }

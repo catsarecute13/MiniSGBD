@@ -82,12 +82,13 @@ public class DeleteCommand {
 		throw new RuntimeException("Erreur dans le compareTo"); //juste pour le plaisir de throw une runtimeexception :) 
 	}
 
-		//Trouver les tuples à supprimer
+		//Trouver les tuples ï¿½ supprimer
 		//Les supprimer sur disque 
 		//Les compter 
 		
 		public void Execute() {
 			ArrayList<Record> res =new ArrayList<Record>(Arrays.asList(FileManager.getFileManager().getAllRecords(relation))); 
+			ArrayList<CreateIndexCommand> index=CreateIndexCommand.getIndex(nomRelation); //INDEX
 				//verifier criteres des condition <1 ou >20 
 				int nbConditions = conditions.keySet().size() ; 
 				if(nbConditions <1 || nbConditions>20 ) {
@@ -156,6 +157,9 @@ public class DeleteCommand {
 				//suppression des records 
 				for(Record r: res) {
 					FileManager.getFileManager().deleteRecordFromRelation(r.rid);
+					for(CreateIndexCommand ind:index){ //Delete Records from Index
+						ind.Delete(r);
+					}
 				}
 				System.out.println("Total deleted records :"+res.size());
 			

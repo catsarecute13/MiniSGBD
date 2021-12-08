@@ -54,4 +54,14 @@ public class CreateIndexCommand{
         index=index.Remove((int)r.values[col]);
         
     }
+
+    public static ArrayList<CreateIndexCommand> getIndex(String rel){
+        ArrayList<CreateIndexCommand> res=new ArrayList<CreateIndexCommand>();
+        for(CreateIndexCommand ind:indexes){
+            if (ind.nomRelation.equals(rel)){
+                res.add(ind);
+            }
+        }
+        return res;
+    }
 }
