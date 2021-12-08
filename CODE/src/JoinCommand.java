@@ -98,10 +98,10 @@ public class JoinCommand {
     	for(int k=0; k<record_page_rel1.length;k++) {
     		System.out.println(record_page_rel1[k]);
     	}
-    System.out.println("-------------");
+    	System.out.println("-------------");
   		 //Je compare les tuples de la page avec tous ceux de rel2
   		 for(int i=0; i<record_page_rel1.length; i++) {
-  			 for(int j=0; j<records_r2.length; i++) {
+  			 for(int j=0; j<records_r2.length; j++) {
   				System.out.println("record de " +rel1.nomRelation +": " + record_page_rel1[i]);
 				 System.out.println("record de " +rel2.nomRelation +": "+ records_r2[j]);
 				 boolean egaux = record_page_rel1[i].compareTo(indexCol_r1, records_r2[j], indexCol_r2);
@@ -115,7 +115,7 @@ public class JoinCommand {
   					 nb_merge++; 
   				 }
   			 }
-  		 } 
+  		 }
   		 PageId tmp = new PageId(PidPre); //le pid à free 
   		 ByteBuffer pageSuiv= BufferManager.getBufferManager().getpage(PidPre);//buffer
   		 PidPre= FileManager.getFileManager().readPageIdFromPageBuffer(pageSuiv, true);//la prochaine page à lire
