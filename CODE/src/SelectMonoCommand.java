@@ -58,7 +58,7 @@ public class SelectMonoCommand {
 				}
 				
 				switch(typeCol) { 
-				case "int": //je pense que ça va devenir int ??? à voir 
+				case "int": //je pense que ï¿½a va devenir int ??? ï¿½ voir 
 					conditions.put(nomOp, Integer.valueOf(tmp[1])); 
 					break; 
 				case "float": //float???
@@ -175,54 +175,78 @@ public class SelectMonoCommand {
 	}
 
 
+	
+
 	public void Update() {
-		upd=new ArrayList<Record>(Arrays.asList(FileManager.getFileManager().getAllRecords(relation)));
-		//verifier criteres des condition <1 ou >20 
-		int nbConditions = conditions.keySet().size() ; 
+		upd=new ArrayList<Record>(Arrays.asList(FileManager.getFileManager().getAllRecords(relation))); 
+		if(!verifWhere) {
+			return;
+		}
+		else {
+			//verifier criteres des condition <1 ou >20 
+			int nbConditions = conditions.keySet().size() ; 
 			if(nbConditions <1 || nbConditions>20 ) {
 				System.out.println("Veuillez entrer un nombre de conditions entre 1 et 20 (inclus)!"); 
-				return ; 
+				return; 
 			}
-			/**
-			 * Pour chaque record on verifie toutes les conditions
-			 * 		Si une condition n'est pas satisfaite, on supprime le record des resultats; 
-			 * 			
-			 * */
-		for(Record r : upd) {
-			for(String [] k : conditions.keySet()) {
-				int i =relation.getIdxInfoCol(k[0]); 
-				int retourCompare = compareTo(r.values[i],conditions.get(k)); 
-				switch(k[1]) { //k[1] est l'operateur //Vu qu'on utilise compareTo on peut imaginer donner le resultat avec des AND
+				/**
+				 * Pour chaque record on verifie toutes les conditions
+				 * 		Si une condition n'est pas satisfaite, on supprime le record des resultats; 
+				 * 			
+				 * */
+			int taille = upd.size(); 
+			for(int j = 0; j<taille; j++) {
+				Record r = upd.get(j);
+				for(String [] k : conditions.keySet()) {
+					int i =relation.getIdxInfoCol(k[0]); 
+					int retourCompare = compareTo(r.values[i],conditions.get(k));
+					//System.out.println(Arrays.toString(k)+ ": retour compareTo= "+ retourCompare);
+					switch(k[1]) { //k[1] est l'operateur //Vu qu'on utilise compareTo on peut imaginer donner le resultat avec des AND
 					case ">": // Faire selon le type 
 						if(retourCompare <=0){
 							upd.remove(r); 
-							break;}
+							taille --; 
+							j=j-1; 
+							}
+						break;
 					case ">=": 
 						if(retourCompare<0) {
 							upd.remove(r); 
-							break;}
+							taille--;
+							j=j-1;
+							}
+						break;
 					case "<": 
 						if(retourCompare>= 0){
 							upd.remove(r); 
-							break;}
+							taille--; 
+							j=j-1;
+							}
+						break;
 					case "<=": 
 						if(retourCompare >0) {
 							upd.remove(r);
-							break; 
+							taille--; 
+							j=j-1; 
 						}
+						break; 
 					case "<>": 
 						if(retourCompare ==0) {
 							upd.remove(r); 
-							break; 
+							taille--; 
+							j=j-1; 
 						}
+						break; 
 					case "=": 
 						if(retourCompare != 0) {
 							upd.remove(r); 
-							break; 
+							taille--; 
+							j=j-1;
 						}
+						break; 
+					}
 				}
-	
-			}
+			}	
 		}
 	}
 	

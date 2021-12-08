@@ -24,8 +24,9 @@ public class UpdateCommand {
 
     public void Execute(){
         SelectMonoCommand commande=new SelectMonoCommand("SELECTMONO * FROM "+nomRelation+where); //oubli des espaces? 
-        commande.update();
+        commande.Update();
         ArrayList<Record> res=commande.upd;
+        ArrayList<Record> comp=commande.upd;
         HashMap<String,String> colonne=new HashMap<String,String>();
         if (colonnes.size()==0){
             System.out.println("Il n'y a aucune colonne dans la partie SET");
@@ -44,12 +45,10 @@ public class UpdateCommand {
         //Pour chaque record
         for(Record r: res){
             //Pour chaque colonne de record, on vérifie si le record doit être changé
-            int buffCount=0;
-            ByteBuffer buff=new ByteBuffer();
-            for(int i;i<relation.infoCol.size();i++){
+            for(int i=0;i<relation.infoCol.size();i++){
                 if (colonne.containsKey(relation.infoCol.get(i).nomCol)){
                     try{
-                        if (relation.infoCol.get(i).typeCol.trim().toLowerCase().equals("integer")) {
+                        if (relation.infoCol.get(i).typeCol.trim().toLowerCase().equals("int")) {
                             r.values[i]=Integer.parseInt(colonne.get(relation.infoCol.get(i).nomCol));
                         }
                         else if (relation.infoCol.get(i).typeCol.trim().toLowerCase().equals("float")) {
@@ -70,8 +69,17 @@ public class UpdateCommand {
                 }
             }
         }
-        // ON A LA LISTE DES RECORDS CHANGéS DANS RES. COMMENT LES éCRIRE SUR DISQUE OU DANS LA RELATION.. 
-        
-        
+        DeleteCommand del=new DeleteCommand("DELETE FROM "+nomRelation+where);
+        del.Execute();
+        int tupCount=0;
+        for (int i=0;i<res.size();i++){
+            StringBuffer buff=new StringBuffer();
+            if (res.get(i).equals(comp.get(i))){
+                tupCount++;
+            }
+            InsertCommand insert=new InsertCommand("INSERT INTO "+nomRelation+" RECORD "+res.get(i).toString());
+            insert.Execute();
+        }
+        System.out.println("Total tuples actualises: "+tupCount);
     }
 }
