@@ -51,6 +51,15 @@ public class Record {
 		
 	}
 	
+	
+	public boolean compareTo(int indxCol, Record r2, int indxCol_r2) {
+		if (values[indxCol] instanceof Integer || values[indxCol] instanceof Float) {
+			return values[indxCol] == r2.values[indxCol_r2]; 
+		}
+		else {
+			return values[indxCol].equals(r2.values[indxCol_r2]);
+		}
+	}
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer("(");
@@ -70,10 +79,10 @@ public class Record {
 		return buffer.deleteCharAt(buffer.length()-1).append(")").toString();
 	}
 	
-	public static String Merge(Record r1, Record r2){
+	public String merge(Record r2){
 		StringBuffer sb=new StringBuffer("(");
-		for(int i = 0; i <r1.relation.nbColonnes; i++) {
-			Object tmp= r1.values[i]; 
+		for(int i = 0; i <relation.nbColonnes; i++) {
+			Object tmp= values[i]; 
 			if(tmp instanceof Integer) {
 				sb.append(((Integer) tmp).intValue()).append(",");
 				}

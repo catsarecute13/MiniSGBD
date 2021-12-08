@@ -202,23 +202,24 @@ public class FileManager{
     	 
     }
     public Record [] getRecordsInDataPage(RelationInfo relInfo, PageId pageId) {
-    	Record [] recordList = new Record[relInfo.slotCount]; 
+    	ArrayList<Record> recordList = new ArrayList<Record>();
+    	//Record [] recordList = new Record[relInfo.slotCount]; 
     	//System.out.println("getpage"+pageId); 
     	ByteBuffer page = BufferManager.getBufferManager().getpage(pageId); 
-    	Record tmpRecord = new Record(relInfo); 
     	page.position(Integer.BYTES*4); 
-    	for(int i = 0; i< recordList.length; i++) {
+    	for(int i = 0; i< relInfo.slotCount; i++) {
+    		Record tmpRecord = new Record(relInfo); 
     		byte tmp = page.get(Integer.BYTES*4 +i); 
+    		//System.out.println(tmp);
     		if(tmp==(byte)1) { //On verifie la bytemap 
     			tmpRecord.readFromBuffer(page, Integer.BYTES*4 +relInfo.slotCount + i*relInfo.recordSize); 
-        		recordList[i]=tmpRecord; 
-        		recordList[i].rid = new Rid(pageId, i);
+        		tmpRecord.rid = new Rid(pageId, i);
+    			recordList.add(tmpRecord);
     		}
-    		
     	}
     	//System.out.println("freePage"+pageId);
     	BufferManager.getBufferManager().freePage(pageId, false);
-    	return recordList; 
+    	return recordList.toArray(Record []::new);
     }
     
     public Rid InsertRecordIntoRelation(RelationInfo relInfo, Record record) {

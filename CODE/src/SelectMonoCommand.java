@@ -175,8 +175,6 @@ public class SelectMonoCommand {
 	}
 
 
-	
-
 	public void Update() {
 		upd=new ArrayList<Record>(Arrays.asList(FileManager.getFileManager().getAllRecords(relation))); 
 		if(!verifWhere) {

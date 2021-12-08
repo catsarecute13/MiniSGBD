@@ -80,6 +80,6 @@ public class UpdateCommand {
             InsertCommand insert=new InsertCommand("INSERT INTO "+nomRelation+" RECORD "+res.get(i).toString());
             insert.Execute();
         }
-        System.out.println("Total tuples actualises: "+tupCount);
+        System.out.println("Total updated records: "+tupCount);
     }
 }
