@@ -14,6 +14,7 @@ public class SelectMonoCommand {
 	public ArrayList<Record> upd;
 
 	public SelectMonoCommand(String ch) {
+		
 		//conditions = new ArrayList<String>(); 
 		conditions = new HashMap<String[],Object>(); 
 		StringTokenizer st = new StringTokenizer(ch); 
@@ -45,29 +46,29 @@ public class SelectMonoCommand {
 
 				//conditions.add(st.nextToken("AND").trim());
 				String [] tmp = s.split("=|<=|>=|<>|<|>"); //nomCol, valeur
-				//System.out.println(Arrays.toString(tmp));
+				System.out.println(Arrays.toString(tmp));
 				nomOp[0]=tmp[0]; //On met le nom de la colonne dans nomOp
-				//System.out.println(nomOp[0]);
+				System.out.println(nomOp[0]);
 				
 				String typeCol =null; 
 				for(ColInfo c : relation.infoCol) {
 					if(c.nomCol.equals(nomOp[0])) {//Tant qu'on a pas trouve la colonne
 						typeCol = c.getTypeCol(tmp[0]);
-						//System.out.println(typeCol);
+						System.out.println(typeCol);
 						}
 				}
 				
 				switch(typeCol) { 
-				case "int": //je pense que �a va devenir int ??? � voir 
+				case "int":  
 					conditions.put(nomOp, Integer.valueOf(tmp[1])); 
 					break; 
-				case "float": //float???
+				case "float": 
 					conditions.put(nomOp, Float.valueOf(tmp[1])); 
 					break; 
 				default: 
 					conditions.put(nomOp, tmp[1]); 
 				}
-				//System.out.println(conditionsToString());
+				System.out.println(conditionsToString());
 				
 				if(st.hasMoreTokens()) {
 					st.nextToken(); //AND 	
@@ -78,6 +79,7 @@ public class SelectMonoCommand {
 	
 	
 	public void Execute() {
+		
 		ArrayList<Record> res =new ArrayList<Record>(Arrays.asList(FileManager.getFileManager().getAllRecords(relation))); 
 		if(!verifWhere) {
 			for(Record r: res) {
@@ -92,68 +94,64 @@ public class SelectMonoCommand {
 				System.out.println("Veuillez entrer un nombre de conditions entre 1 et 20 (inclus)!"); 
 				return; 
 			}
-				/**
-				 * Pour chaque record on verifie toutes les conditions
-				 * 		Si une condition n'est pas satisfaite, on supprime le record des resultats; 
-				 * 			
-				 * */
+			
 			int taille = res.size(); 
-			boolean removed = true; 
 			for(int j = 0; j<taille; j++) {
+				boolean removed = false; 
 				Record r = res.get(j);
+				System.out.println("record: "+r);
 				for(String [] k : conditions.keySet()) {
 					int i =relation.getIdxInfoCol(k[0]); 
 					int retourCompare = compareTo(r.values[i],conditions.get(k));
-					//System.out.println(Arrays.toString(k)+ ": retour compareTo= "+ retourCompare);
+					System.out.println("\t"+Arrays.toString(k)+ ": retour compareTo= "+ retourCompare + " i=" + i);
 					switch(k[1]) { //k[1] est l'operateur //Vu qu'on utilise compareTo on peut imaginer donner le resultat avec des AND
 					case ">": // Faire selon le type 
 						if(retourCompare <=0){
-							res.remove(r); 
+							removed =res.remove(r); 
 							taille --; 
-							j--; 
+							j--;
 						}
 						break;
 					case ">=": 
 						if(retourCompare<0) {
-							res.remove(r); 
+							removed =res.remove(r);
 							taille--;
 							j--;
-							}
+						}
 						break;
 					case "<": 
 						if(retourCompare>= 0){
-							res.remove(r); 
+							removed =res.remove(r);
 							taille--; 
 							j--;
-							}
+						}
 						break;
 					case "<=": 
 						if(retourCompare >0) {
-							res.remove(r);
+							removed =res.remove(r);
 							taille--; 
 							j--; 
 						}
 						break; 
 					case "<>": 
 						if(retourCompare ==0) {
-							res.remove(r); 
+							removed =res.remove(r);
 							taille--; 
 							j--; 
 						}
 						break; 
 					case "=": 
 						if(retourCompare != 0) {
-							res.remove(r); 
+							removed =res.remove(r);
 							taille--; 
 							j--;
 						}
 						break; 
-					default:
-						removed = false; 
 					}
-				if(removed) {
-					break;
-				}
+					System.out.println("removed="+removed);
+					if(removed) {
+						break;
+					}
 				}
 			}
 			//affichage des records
@@ -161,8 +159,9 @@ public class SelectMonoCommand {
 				System.out.println(r);
 			}
 			System.out.println("Total records :"+res.size());
-		
+			
 		}
+		
 	}
 	
 	private int compareTo(Object obj1, Object obj2) {

@@ -100,9 +100,9 @@ public class DeleteCommand {
 					 * 		Si une condition n'est pas satisfaite, on supprime le record des resultats; 
 					 * 			
 					 * */
-				boolean removed = false; 
 				int taille = res.size(); 
 				for(int j = 0; j<taille; j++) {
+					boolean removed = false; 
 					Record r = res.get(j);
 					for(String [] k : conditions.keySet()) {
 						int i =relation.getIdxInfoCol(k[0]); 
