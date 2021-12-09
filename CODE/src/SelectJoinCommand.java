@@ -54,7 +54,7 @@ public class SelectJoinCommand{
             }
             smc.Update(); //Cette méthode nous donne la liste des elements de Rel2 stockés dans la variable upd
             for(Record s:smc.upd){
-                System.out.println(Record.Merge(r, s)); //Méthode statique ajoutée à la classe Record qui donne une chaine de la forme "(record1,record2)"
+                System.out.println(s.merge(r)); //Méthode ajoutée à la classe Record qui donne une chaine de la forme "(record1,record2)"
                 count++;
             }
         }
