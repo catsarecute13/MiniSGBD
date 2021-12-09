@@ -53,7 +53,7 @@ public class Catalog {
 			f.close();
 		}
 		catch (IOException e){
-			System.out.println(" Erreur E/S ");
+			System.out.println(" Erreur E/S FINISH CAT ");
 			e.printStackTrace();
 		}
 		relationTab.clear();

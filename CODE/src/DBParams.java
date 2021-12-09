@@ -1,4 +1,3 @@
-import java.io.File;
 
 public class DBParams {  //On la declare en final ? 
 	public static String projet = "C:\\Users\\rahal\\Desktop\\MiniSGBD";

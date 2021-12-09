@@ -12,6 +12,7 @@ public class Main {
 			buff[i] = '1';
 		}*/
 		//DiskManager.writePage(id, ByteBuffer.wrap(buff));
+		DBParams.DBPath = args[1];
 		DBManager.getDBManager().Init();
 		Scanner lectureClavier=new Scanner(System.in);
 		String chaine;

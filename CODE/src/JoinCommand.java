@@ -40,12 +40,12 @@ public class JoinCommand {
     }
     
     public void Execute() {
-    	//je dois parcourir toutes les pages de la relation, pour chaque page, je compare les tuples de la pages, à tous les tuples de la relation 2
+    	//je dois parcourir toutes les pages de la relation, pour chaque page, je compare les tuples de la pages, Ã  tous les tuples de la relation 2
     	//pages pleines
     	int nb_merge=0;  
-    	RelationInfo rel1 = Catalog.getCatalog().getRelation(champ1[0]); //on récupère la première relation
-    	RelationInfo rel2 = Catalog.getCatalog().getRelation(champ2[0]);//on récupère la seconde relation
-    	Record [] records_r2= FileManager.getFileManager().getAllRecords(rel2); //je récupère tous les record de la seconde relation
+    	RelationInfo rel1 = Catalog.getCatalog().getRelation(champ1[0]); //on rÃ©cupÃ¨re la premiÃ¨re relation
+    	RelationInfo rel2 = Catalog.getCatalog().getRelation(champ2[0]);//on rÃ©cupÃ¨re la seconde relation
+    	Record [] records_r2= FileManager.getFileManager().getAllRecords(rel2); //je rÃ©cupÃ¨re tous les record de la seconde relation
     	System.out.println("Les records de"+ rel2.nomRelation); 
     	for(int k=0; k<records_r2.length;k++) {
     		System.out.println(records_r2[k]);
@@ -59,7 +59,7 @@ public class JoinCommand {
     	BufferManager.getBufferManager().freePage(rel1.headerPageId, false);
     	PageId factice = new PageId(-1,0);
     	 while(!PidSuiv.equals(factice)) {
-    		  //je récupère la page 
+    		  //je rï¿½cupï¿½re la page 
     		 Record [] record_page_rel1 = FileManager.getFileManager().getRecordsInDataPage(rel1, PidSuiv);
     		 System.out.println("Les records de la page "+ PidSuiv.PageIdx+ " de"+ rel1.nomRelation); 
     	    	for(int k=0; k<record_page_rel1.length;k++) {
@@ -82,9 +82,9 @@ public class JoinCommand {
     				 }
     			 }
     		 } 
-    		 PageId tmp = new PageId(PidSuiv); //le pid à free 
+    		 PageId tmp = new PageId(PidSuiv); //le pid Ã  free 
     		 ByteBuffer pageSuiv= BufferManager.getBufferManager().getpage(PidSuiv);
-    		 PidSuiv= FileManager.getFileManager().readPageIdFromPageBuffer(pageSuiv, false);//la prochaine page à lire
+    		 PidSuiv= FileManager.getFileManager().readPageIdFromPageBuffer(pageSuiv, false);//la prochaine page Ã  lire
     		 BufferManager.getBufferManager().freePage(tmp, false);
     	 }
     	 //pages non pleines
@@ -92,7 +92,7 @@ public class JoinCommand {
      	PageId PidPre= FileManager.getFileManager().readPageIdFromPageBuffer(headerPagebuff, true); //true --> pages non pleines 
      	BufferManager.getBufferManager().freePage(rel1.headerPageId, false);//je free la headerPage
      	while(!PidPre.equals(factice)) {
-  		  //je récupère la page 
+  		  //je rÃ©cupÃ¨re la page 
   		 Record [] record_page_rel1 = FileManager.getFileManager().getRecordsInDataPage(rel1, PidPre); 
   		System.out.println("Les records de la page "+ PidPre.PageIdx+ " de"+ rel1.nomRelation); 
     	for(int k=0; k<record_page_rel1.length;k++) {
@@ -116,9 +116,9 @@ public class JoinCommand {
   				 }
   			 }
   		 }
-  		 PageId tmp = new PageId(PidPre); //le pid à free 
+  		 PageId tmp = new PageId(PidPre); //le pid Ã  free 
   		 ByteBuffer pageSuiv= BufferManager.getBufferManager().getpage(PidPre);//buffer
-  		 PidPre= FileManager.getFileManager().readPageIdFromPageBuffer(pageSuiv, true);//la prochaine page à lire
+  		 PidPre= FileManager.getFileManager().readPageIdFromPageBuffer(pageSuiv, true);//la prochaine page ï¿½ lire
   		 BufferManager.getBufferManager().freePage(tmp, false);
   	 }
      System.out.println("Total records :"+ nb_merge);

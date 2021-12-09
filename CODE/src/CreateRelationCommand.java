@@ -18,9 +18,9 @@ public class CreateRelationCommand {
 		st.nextToken(); //CREATE
 		st.nextToken(); //TABLE
 		nomRelation=st.nextToken(); //nom de la relation
-		String ch= st.nextToken();  //on prend la parenthèse entière
+		String ch= st.nextToken();  //on prend la parenthÃ¨se entiÃ¨re
 		StringBuffer buff = new StringBuffer(ch);
-		buff.deleteCharAt(0);  //on enlève parenthèse debut
+		buff.deleteCharAt(0);  //on enlÃ¨ve parenthÃ¨se debut
 		buff.deleteCharAt(buff.length()-1); //on enleve la parenthese de fin
 		
 		st = new StringTokenizer(buff.toString(), ",");
