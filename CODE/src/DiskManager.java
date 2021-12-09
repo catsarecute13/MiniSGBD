@@ -25,7 +25,7 @@ public class DiskManager { //singleton
 				try {
 					fichier.createNewFile();
 				} catch (IOException e) {
-					System.out.println("Impossible de créer le fichier: "+ DBParams.DBPath+"/F"+dirList.length+".df");
+					System.out.println("Impossible de crï¿½er le fichier: "+ DBParams.DBPath+"/F"+dirList.length+".df");
 					System.exit(-1);
 				} 
 				PageId id = new PageId(0,0);
@@ -38,7 +38,7 @@ public class DiskManager { //singleton
 					try {
 						fichier.createNewFile();
 					} catch (IOException e) {
-						System.out.println("Impossible de créer le fichier: "+ DBParams.DBPath+"/F"+dirList.length+".df");
+						System.out.println("Impossible de crï¿½er le fichier: "+ DBParams.DBPath+"/F"+dirList.length+".df");
 						System.exit(-1);
 					}
 					PageId id = new PageId(dirList.length -ce , 0);

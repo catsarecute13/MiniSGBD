@@ -207,10 +207,10 @@ public class FileManager{
     	}
     	//on update la byte map
     	pageBuffer.position(Integer.BYTES*4 +record.rid.slotIdx);
-    	pageBuffer.put(new byte[] {0}, 0, 1);
-    	BufferManager.getBufferManager().freePage(record.rid.pageid, true);
+    	pageBuffer.put((byte)0);
+    	//BufferManager.getBufferManager().freePage(record.rid.pageid, true);
     	//Deplacer la page si necessaire
-    	if(!pleine) { 
+    	if(pleine) { 
     		PageId pidSuivPage = readPageIdFromPageBuffer(pageBuffer, true);
     		PageId pidPrePage = readPageIdFromPageBuffer(pageBuffer, false); 
     		
@@ -255,10 +255,10 @@ public class FileManager{
     		
     		//On libere la page aupres de BufferManager avec dirty 
     		//System.out.println("freePage"+pageId); 
-    		BufferManager.getBufferManager().freePage(record.rid.pageid, true);
     		//System.out.println(BufferManager.getBufferManager());
     		
     	}
+    	BufferManager.getBufferManager().freePage(record.rid.pageid, true);
     	
     	 
     }

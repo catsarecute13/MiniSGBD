@@ -100,6 +100,7 @@ public class DeleteCommand {
 					 * 		Si une condition n'est pas satisfaite, on supprime le record des resultats; 
 					 * 			
 					 * */
+				boolean removed = false; 
 				int taille = res.size(); 
 				for(int j = 0; j<taille; j++) {
 					Record r = res.get(j);
@@ -110,47 +111,50 @@ public class DeleteCommand {
 						switch(k[1]) { //k[1] est l'operateur //Vu qu'on utilise compareTo on peut imaginer donner le resultat avec des AND
 						case ">": // Faire selon le type 
 							if(retourCompare <=0){
-								res.remove(r); 
+								removed = res.remove(r); 
 								taille --; 
 								j=j-1; 
-								}
+							}
 							break;
 						case ">=": 
 							if(retourCompare<0) {
-								res.remove(r); 
+								removed = res.remove(r);
 								taille--;
-								j=j-1;
-								}
+								j--;
+							}
 							break;
 						case "<": 
 							if(retourCompare>= 0){
-								res.remove(r); 
+								removed = res.remove(r);
 								taille--; 
-								j=j-1;
-								}
+								j--;
+							}
 							break;
 						case "<=": 
 							if(retourCompare >0) {
-								res.remove(r);
+								removed = res.remove(r);
 								taille--; 
-								j=j-1; 
+								j--; 
 							}
 							break; 
 						case "<>": 
 							if(retourCompare ==0) {
-								res.remove(r); 
+								removed = res.remove(r); 
 								taille--; 
-								j=j-1; 
+								j--; 
 							}
 							break; 
 						case "=": 
 							if(retourCompare != 0) {
-								res.remove(r); 
+								removed = res.remove(r); 
 								taille--; 
-								j=j-1;
+								j--;
 							}
 							break; 
 						}
+					if(removed) {
+						break;
+					}
 						
 					}
 				}

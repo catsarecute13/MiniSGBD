@@ -14,10 +14,11 @@ public class TestDeleteCommand {
 		}
 		BatchInsertCommand batch = new BatchInsertCommand("BATCHINSERT INTO S FROM FILE S1.csv");
 		batch.Execute();
-		
-		DeleteCommand delete = new DeleteCommand("DELETE FROM S WHERE C=Nati ");
+		DeleteCommand delete = new DeleteCommand("DELETE FROM S WHERE B=167 AND A=GR AND F=12");
 		delete.Execute();
-				
+		
+		SelectMonoCommand select = new SelectMonoCommand("SELECT * FROM S");
+		select.Execute();
 
 	}
 
