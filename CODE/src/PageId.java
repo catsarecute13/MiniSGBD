@@ -1,8 +1,9 @@
 
 
 public class PageId {
-	public int FileIdx; //Fx.df, donc le x qui est le numéro du fichier
+	public int FileIdx; //Fx.df, donc le x qui est le numï¿½ro du fichier
 	public int PageIdx; // Page appartient = {0,1,2,3}
+	public static final PageId pidFactice= new PageId(-1,0);
 	 //PageID (x, page)
 	
 	public PageId(int file, int page) {

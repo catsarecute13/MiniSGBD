@@ -156,7 +156,7 @@ public class DeleteCommand {
 				}
 				//suppression des records 
 				for(Record r: res) {
-					FileManager.getFileManager().deleteRecordFromRelation(r.rid);
+					FileManager.getFileManager().deleteRecordFromRelation(r);
 					for(CreateIndexCommand ind:index){ //Delete Records from Index
 						ind.Delete(r);
 					}

@@ -193,12 +193,73 @@ public class FileManager{
 
     }
     
-    public void deleteRecordFromRelation(Rid rid) {
+    public void deleteRecordFromRelation(Record record) {
     	//System.out.println("getPage"+rid.pageid);
-    	ByteBuffer pageBuffer=BufferManager.getBufferManager().getpage(rid.pageid);
-    	pageBuffer.position(Integer.BYTES*4 +rid.slotIdx);
+    	ByteBuffer pageBuffer=BufferManager.getBufferManager().getpage(record.rid.pageid);
+    	//on vérifie si la page est pleine pour savoir si on doit la déplacer
+    	pageBuffer.position(Integer.BYTES*4); 
+    	boolean pleine = true;
+    	for(int i =0; i<record.relation.slotCount; i++) {
+    		if(pageBuffer.get()==(byte)0) {
+    			pleine=false; 
+    			break;
+    		}
+    	}
+    	//on update la byte map
+    	pageBuffer.position(Integer.BYTES*4 +record.rid.slotIdx);
     	pageBuffer.put(new byte[] {0}, 0, 1);
-    	BufferManager.getBufferManager().freePage(rid.pageid, true);
+    	BufferManager.getBufferManager().freePage(record.rid.pageid, true);
+    	//Deplacer la page si necessaire
+    	if(!pleine) { 
+    		PageId pidSuivPage = readPageIdFromPageBuffer(pageBuffer, true);
+    		PageId pidPrePage = readPageIdFromPageBuffer(pageBuffer, false); 
+    		
+    		if(!pidSuivPage.equals(PageId.pidFactice)) {//Si ce n'est pas la derniere page
+    			//System.out.println("getPage"+pidSuivPage);
+    			ByteBuffer buffPidSuivPage = BufferManager.getBufferManager().getpage(pidSuivPage); 
+    			writePageIdToPageBuffer(pidPrePage, buffPidSuivPage,false);  //update du pre dans la pageSuiv
+    			//System.out.println("freePage"+pidSuivPage);
+    			BufferManager.getBufferManager().freePage(pidSuivPage, true);
+    		}
+    		//System.out.println("getPage"+pidPrePage); 
+    		ByteBuffer buffPidPrePage = BufferManager.getBufferManager().getpage(pidPrePage); 
+    		if(pidPrePage.equals(record.relation.headerPageId)) {
+    			writePageIdToPageBuffer(pidSuivPage, buffPidPrePage, false); // page pleines -->false (car c'est header)
+    		}
+    		else {
+    			writePageIdToPageBuffer(pidSuivPage, buffPidPrePage, true); 
+    		}
+    		//System.out.println("freePage"+pidPrePage);
+    		BufferManager.getBufferManager().freePage(pidPrePage, true);
+    		
+    		
+    		//INSERTION DANS LES PAGES NON PLEINES
+    		//On deplace la page vers les pages non pleines
+    		//Je recupere headerPage 
+    		//System.out.println("getPage"+relInfo.headerPageId);
+    		ByteBuffer headerPage = BufferManager.getBufferManager().getpage(record.relation.headerPageId); 
+    		PageId pidPrecedent = readPageIdFromPageBuffer(headerPage, true); 
+    		writePageIdToPageBuffer(record.relation.headerPageId, pageBuffer, false); //update precedant de page
+    		writePageIdToPageBuffer(record.rid.pageid, headerPage, true); //update precedant dans buffer
+    		writePageIdToPageBuffer(pidPrecedent, pageBuffer, true); //update suivant dans la page
+    		//System.out.println("freePage"+relInfo.headerPageId);
+    		BufferManager.getBufferManager().freePage(record.relation.headerPageId, true);
+    		
+    		if(!pidPrecedent.equals(PageId.pidFactice)){ //S'il existe une page pleine alors avant insertion
+    			//System.out.println("getPage"+pidPrecedent);
+    			ByteBuffer pagePleine = BufferManager.getBufferManager().getpage(pidPrecedent); 
+    			writePageIdToPageBuffer(record.rid.pageid, pagePleine, false); //update precedant dans la pagePleine
+    			//System.out.println("freePage"+pidPrecedent);
+    			BufferManager.getBufferManager().freePage(pidPrecedent, true);
+    		}
+    		
+    		//On libere la page aupres de BufferManager avec dirty 
+    		//System.out.println("freePage"+pageId); 
+    		BufferManager.getBufferManager().freePage(record.rid.pageid, true);
+    		//System.out.println(BufferManager.getBufferManager());
+    		
+    	}
+    	
     	 
     }
     public Record [] getRecordsInDataPage(RelationInfo relInfo, PageId pageId) {
