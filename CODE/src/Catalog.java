@@ -6,7 +6,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList; 
 
-public class Catalog {
+public class Catalog implements java.io.Serializable {
+
+	private static final long serialVersionUID = 6080360436764785762L;
+
 	private static Catalog catalog = Init(); 
 	public  ArrayList<RelationInfo> relationTab; 
 	public int compteur; 

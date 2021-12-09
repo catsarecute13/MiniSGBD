@@ -1,5 +1,5 @@
 
-public class DBParams {  //On la declare en final ? 
+public class DBParams { 
 	public static String projet = "C:\\Users\\rahal\\Desktop\\MiniSGBD";
 	public static String DBPath = "C:\\Users\\rahal\\Desktop\\MiniSGBD\\DB";
 	//public static String DBPath = "C:\\Users\\sarah\\OneDrive\\Bureau";
