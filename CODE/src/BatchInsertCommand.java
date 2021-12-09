@@ -43,7 +43,7 @@ public class BatchInsertCommand{
 			    insert.Execute(); //Executer
 			}
 		} catch (IOException e) {
-			System.out.println("Echec de la commande BatchInsert, problème de lecture dans le fichier");
+			System.out.println("Echec de la commande BatchInsert, problÃ¨me de lecture dans le fichier");
 		}
     }
 }
