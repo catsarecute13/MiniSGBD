@@ -31,7 +31,8 @@ public class Catalog {
 		
         catch (IOException e){
 			System.out.println(" Erreur E/S ");
-			 return new Catalog(); 
+			e.printStackTrace();
+		    return new Catalog(); 
 		}
         catch (ClassNotFoundException e){
 			System.out.println(" Pb classe ");
@@ -51,7 +52,10 @@ public class Catalog {
 			s.close();
 			f.close();
 		}
-		catch (IOException e){System.out.println(" Erreur E/S ");}
+		catch (IOException e){
+			System.out.println(" Erreur E/S ");
+			e.printStackTrace();
+		}
 		relationTab.clear();
 		compteur = 0; 
 	}

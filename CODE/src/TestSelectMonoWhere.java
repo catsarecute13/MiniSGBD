@@ -29,6 +29,8 @@ public class TestSelectMonoWhere {
 		select.Execute();
 		SelectMonoCommand select2 = new SelectMonoCommand("SELECTMONO * FROM S WHERE C=Nati");// AND A=KJ AND C>=ABCD AND C<>CSMA"); 
 		select2.Execute();
+		SelectMonoCommand select3 = new SelectMonoCommand("SELECTMONO * FROM S WHERE B=167 AND A=GR AND F=12");
+		select3.Execute();
 		
 
 	}

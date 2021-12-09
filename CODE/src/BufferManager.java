@@ -73,10 +73,8 @@ public class BufferManager {
 	public void FlushAll(){
         for (Frame element:pool){
             if (element != null && element.dirty) {
-                DiskManager.writePage(element.id, ByteBuffer.wrap(element.buffer)); 
-
-            }
-            
+                DiskManager.writePage(element.id, ByteBuffer.wrap(element.buffer));
+            }    
         }
 	}
 

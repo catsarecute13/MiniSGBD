@@ -62,35 +62,35 @@ public class Record {
 	}
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer("(");
+		StringBuffer buffer = new StringBuffer();
 		for(int i = 0; i <relation.nbColonnes; i++) {
 			Object tmp= values[i]; 
 			if(tmp instanceof Integer) {
-				buffer.append(((Integer) tmp).intValue()).append(",");
+				buffer.append(((Integer) tmp).intValue()).append(" ; ");
 				}
 			else if(tmp instanceof Float) {
-				buffer.append(((Float)tmp).floatValue()).append(","); 
+				buffer.append(((Float)tmp).floatValue()).append(" ; "); 
 			}
 			else {
-				buffer.append((String)tmp).append(","); 
+				buffer.append((String)tmp).append(" ; "); 
 			}
 		}
 		
-		return buffer.deleteCharAt(buffer.length()-1).append(")").toString();
+		return buffer.substring(0, buffer.length()-3);
 	}
 	
 	public String merge(Record r2){
-		StringBuffer sb=new StringBuffer("(");
+		StringBuffer sb=new StringBuffer();
 		for(int i = 0; i <relation.nbColonnes; i++) {
 			Object tmp= values[i]; 
 			if(tmp instanceof Integer) {
-				sb.append(((Integer) tmp).intValue()).append(",");
+				sb.append(((Integer) tmp).intValue()).append(" ; ");
 				}
 			else if(tmp instanceof Float) {
-				sb.append(((Float)tmp).floatValue()).append(","); 
+				sb.append(((Float)tmp).floatValue()).append(" ; "); 
 			}
 			else {
-				sb.append((String)tmp).append(","); 
+				sb.append((String)tmp).append(" ; "); 
 			}
 		}
 		for(int i = 0; i <r2.relation.nbColonnes; i++) {
@@ -105,6 +105,6 @@ public class Record {
 				sb.append((String)tmp).append(" ; "); 
 			}
 		}
-		return sb.deleteCharAt(sb.length()-1).append(")").toString();
+		return sb.substring(0, sb.length()-3);
 	}
 }

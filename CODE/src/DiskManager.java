@@ -93,7 +93,8 @@ public class DiskManager { //singleton
 			file.write(buff.array(), 0, DBParams.pageSize);
 			file.close();
 		}catch (IOException e) {
-			System.out.println("Erreur E/S");
+			//System.out.println("Erreur E/S");
+			e.printStackTrace();
 		}
 		
 	}

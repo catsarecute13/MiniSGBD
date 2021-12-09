@@ -98,6 +98,7 @@ public class SelectMonoCommand {
 				 * 			
 				 * */
 			int taille = res.size(); 
+			boolean removed = true; 
 			for(int j = 0; j<taille; j++) {
 				Record r = res.get(j);
 				for(String [] k : conditions.keySet()) {
@@ -109,53 +110,57 @@ public class SelectMonoCommand {
 						if(retourCompare <=0){
 							res.remove(r); 
 							taille --; 
-							j=j-1; 
-							}
+							j--; 
+						}
 						break;
 					case ">=": 
 						if(retourCompare<0) {
 							res.remove(r); 
 							taille--;
-							j=j-1;
+							j--;
 							}
 						break;
 					case "<": 
 						if(retourCompare>= 0){
 							res.remove(r); 
 							taille--; 
-							j=j-1;
+							j--;
 							}
 						break;
 					case "<=": 
 						if(retourCompare >0) {
 							res.remove(r);
 							taille--; 
-							j=j-1; 
+							j--; 
 						}
 						break; 
 					case "<>": 
 						if(retourCompare ==0) {
 							res.remove(r); 
 							taille--; 
-							j=j-1; 
+							j--; 
 						}
 						break; 
 					case "=": 
 						if(retourCompare != 0) {
 							res.remove(r); 
 							taille--; 
-							j=j-1;
+							j--;
 						}
 						break; 
+					default:
+						removed = false; 
 					}
-					
+				if(removed) {
+					break;
+				}
 				}
 			}
 			//affichage des records
 			for(Record r: res) {
 				System.out.println(r);
 			}
-			System.out.println("Total record :"+res.size());
+			System.out.println("Total records :"+res.size());
 		
 		}
 	}
