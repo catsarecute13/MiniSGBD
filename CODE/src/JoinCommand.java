@@ -119,7 +119,7 @@ public class JoinCommand {
   		 PageId tmp = new PageId(PidPre); //le pid à free 
   		 ByteBuffer pageSuiv= BufferManager.getBufferManager().getpage(PidPre);//buffer
   		 PidPre= FileManager.getFileManager().readPageIdFromPageBuffer(pageSuiv, true);//la prochaine page à lire
-  		 System.out.println(PidPre);
+  		 //System.out.println(PidPre);
   		 BufferManager.getBufferManager().freePage(tmp, false);
   	 }
      System.out.println("Total records :"+ nb_merge);

@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class SelectJoinCommand{
+public class SelectJoinCommand{ //Pas la bonne classe, code dans JoinCommand
     ArrayList<Record> resultat;
     RelationInfo rel1,rel2;
     String nomRel1,nomRel2;

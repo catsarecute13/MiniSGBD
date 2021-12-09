@@ -14,8 +14,6 @@ public class Main {
 		//DiskManager.writePage(id, ByteBuffer.wrap(buff));
 		DBParams.DBPath = args[0];
 		DBManager.getDBManager().Init();
-		for(RelationInfo r : Catalog.getCatalog().relationTab)
-			System.out.println(r);
 		Scanner lectureClavier=new Scanner(System.in);
 		String chaine;
 		while (true){

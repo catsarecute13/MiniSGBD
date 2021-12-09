@@ -10,6 +10,9 @@ public class DiskManager { //singleton
 
 	public static PageId AllocPage() {
 		File dir = new File(DBParams.DBPath); 
+		if(!dir.exists()) {
+			dir.mkdir();
+		}
 		File[] dirList = dir.listFiles(); 
 		int ce = new File(DBParams.DBPath+File.separator+"Catalog.def").exists() ? 1 : 0; 
 		

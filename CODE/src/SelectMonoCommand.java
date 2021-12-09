@@ -179,7 +179,7 @@ public class SelectMonoCommand {
 	}
 
 
-	public void Update() {
+	public void Update() { //A refaire
 		upd=new ArrayList<Record>(Arrays.asList(FileManager.getFileManager().getAllRecords(relation))); 
 		if(!verifWhere) {
 			return;
@@ -198,6 +198,7 @@ public class SelectMonoCommand {
 				 * */
 			int taille = upd.size(); 
 			for(int j = 0; j<taille; j++) {
+				boolean removed = false; 
 				Record r = upd.get(j);
 				for(String [] k : conditions.keySet()) {
 					int i =relation.getIdxInfoCol(k[0]); 
@@ -206,46 +207,49 @@ public class SelectMonoCommand {
 					switch(k[1]) { //k[1] est l'operateur //Vu qu'on utilise compareTo on peut imaginer donner le resultat avec des AND
 					case ">": // Faire selon le type 
 						if(retourCompare <=0){
-							upd.remove(r); 
+							removed = upd.remove(r); 
 							taille --; 
-							j=j-1; 
+							j--; 
 							}
 						break;
 					case ">=": 
 						if(retourCompare<0) {
-							upd.remove(r); 
+							removed = upd.remove(r); 
 							taille--;
-							j=j-1;
+							j--;
 							}
 						break;
 					case "<": 
 						if(retourCompare>= 0){
-							upd.remove(r); 
+							removed = upd.remove(r); 
 							taille--; 
-							j=j-1;
+							j--;
 							}
 						break;
 					case "<=": 
 						if(retourCompare >0) {
-							upd.remove(r);
+							removed = upd.remove(r);
 							taille--; 
-							j=j-1; 
+							j--; 
 						}
 						break; 
 					case "<>": 
 						if(retourCompare ==0) {
-							upd.remove(r); 
+							removed =upd.remove(r); 
 							taille--; 
 							j=j-1; 
 						}
 						break; 
 					case "=": 
 						if(retourCompare != 0) {
-							upd.remove(r); 
+							removed = upd.remove(r); 
 							taille--; 
-							j=j-1;
+							j--;
 						}
 						break; 
+					}
+					if(removed) {
+						break;
 					}
 				}
 			}	
