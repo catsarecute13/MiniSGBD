@@ -23,7 +23,7 @@ public class BatchInsertCommand{
 
     //il faut ajouter un try catch
     public void Execute() {
-        File file = new File(DBParams.projet+"\\"+nomFichier);    //Ouverture du fichier
+        File file = new File(nomFichier);    //Ouverture du fichier
         FileReader fileReader;
 		try {
 			fileReader = new FileReader(file);

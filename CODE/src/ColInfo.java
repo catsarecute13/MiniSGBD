@@ -1,4 +1,6 @@
-public class ColInfo {
+public class ColInfo implements java.io.Serializable{
+	
+	private static final long serialVersionUID = -3564709792920700405L;
 	public String nomCol; 
 	public String typeCol; 
 	

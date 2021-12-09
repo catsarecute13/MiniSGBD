@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -21,7 +22,7 @@ public class Catalog implements java.io.Serializable {
 	
 	public static Catalog Init() {
 		try {
-            FileInputStream f = new FileInputStream (DBParams.DBPath+"/Catalog.def");
+            FileInputStream f = new FileInputStream (DBParams.DBPath+File.separator+"Catalog.def");
             ObjectInputStream s = new ObjectInputStream(f);
 			//relationTab =((Catalog) s).readObject().relationTab; 
 			//compteur = (Catalog) s.readObject().compteur;
@@ -48,7 +49,7 @@ public class Catalog implements java.io.Serializable {
 	}
 	public void Finish() {
 		try {
-			FileOutputStream f = new FileOutputStream (DBParams.DBPath+"/Catalog.def");
+			FileOutputStream f = new FileOutputStream (DBParams.DBPath+File.separator+"Catalog.def");
 			ObjectOutputStream s = new ObjectOutputStream(f);
 			s.writeObject(this);
 			s.flush();

@@ -11,7 +11,7 @@ public class DiskManager { //singleton
 	public static PageId AllocPage() {
 		File dir = new File(DBParams.DBPath); 
 		File[] dirList = dir.listFiles(); 
-		int ce = new File(DBParams.DBPath+"/Catalog.def").exists() ? 1 : 0; 
+		int ce = new File(DBParams.DBPath+File.separator+"Catalog.def").exists() ? 1 : 0; 
 		
 		Arrays.sort(dirList, new Comparator<File>(){ 
 			@Override
@@ -21,11 +21,11 @@ public class DiskManager { //singleton
 		});
 		if(dirList != null) { 
 			if (dirList.length - ce ==0 ) { 
-				File fichier = new File(DBParams.DBPath+"/F"+dirList.length+".df"); 
+				File fichier = new File(DBParams.DBPath+File.separator+"F"+dirList.length+".df"); 
 				try {
 					fichier.createNewFile();
 				} catch (IOException e) {
-					System.out.println("Impossible de cr�er le fichier: "+ DBParams.DBPath+"/F"+dirList.length+".df");
+					System.out.println("Impossible de créer le fichier: "+ DBParams.DBPath+File.separator+"F"+dirList.length+".df");
 					System.exit(-1);
 				} 
 				PageId id = new PageId(0,0);
@@ -34,11 +34,11 @@ public class DiskManager { //singleton
 			
 			else {
 				if (dirList[dirList.length-1].length() > 12288) {
-					File fichier = new File(DBParams.DBPath+"/F"+ dirList.length+".df"); 
+					File fichier = new File(DBParams.DBPath+File.separator+"F"+ dirList.length+".df"); 
 					try {
 						fichier.createNewFile();
 					} catch (IOException e) {
-						System.out.println("Impossible de cr�er le fichier: "+ DBParams.DBPath+"/F"+dirList.length+".df");
+						System.out.println("Impossible de créer le fichier: "+ DBParams.DBPath+File.separator+"F"+dirList.length+".df");
 						System.exit(-1);
 					}
 					PageId id = new PageId(dirList.length -ce , 0);
@@ -76,7 +76,7 @@ public class DiskManager { //singleton
 	public static void readPage(PageId pageID, ByteBuffer buff) { //si pageID == -1 0, on throws un nullPointerException
 		//Ecrire sur buffer le contenu disque de la page identifiee par l'argument pageId. 
 		try {
-			RandomAccessFile file = new RandomAccessFile(DBParams.DBPath+"/F"+pageID.FileIdx+".df", "r" );
+			RandomAccessFile file = new RandomAccessFile(DBParams.DBPath+File.separator+"F"+pageID.FileIdx+".df", "r" );
 			file.seek((pageID.PageIdx)*DBParams.pageSize);
 			file.read(buff.array(), 0, DBParams.pageSize); 
 			file.close();
@@ -88,7 +88,7 @@ public class DiskManager { //singleton
 	
 	public static void writePage(PageId pageID, ByteBuffer buff) {	
 		try {
-			RandomAccessFile file = new RandomAccessFile(DBParams.DBPath+"/F"+pageID.FileIdx+".df", "rw");
+			RandomAccessFile file = new RandomAccessFile(DBParams.DBPath+File.separator+"F"+pageID.FileIdx+".df", "rw");
 			file.seek((pageID.PageIdx)*DBParams.pageSize);
 			file.write(buff.array(), 0, DBParams.pageSize);
 			file.close();

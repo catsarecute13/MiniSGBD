@@ -34,7 +34,7 @@ public class CreateRelationCommand {
 		for(String c: liste) {
 			st = new StringTokenizer(c.toString(), ":");
 			nomColonne.add(st.nextToken());
-			typeColonne.add(st.nextToken());
+			typeColonne.add(st.nextToken().toLowerCase());
 		}
 	}
 	

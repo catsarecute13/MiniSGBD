@@ -36,6 +36,17 @@ public class DBManager {
                 //Le nom que Mayel va choisir
             	SelectMonoCommand selectMono = new SelectMonoCommand(ch); 
             	selectMono.Execute(); 
+            	break;
+            case "DELETE":
+            	DeleteCommand delete = new DeleteCommand(ch);
+            	delete.Execute();
+            	break;
+            case "SELECTJOIN":
+            	JoinCommand join = new JoinCommand(ch);
+            	join.Execute();
+            	break;
+            default:
+            	System.out.println("Aucune commande de ce type.");
         }
     }
 

@@ -22,7 +22,8 @@ public class Main {
 			if (chaine.equals("EXIT")){
 				DBManager.getDBManager().Finish();
 				break;
-			}
+			} else if (chaine.equals(""))
+				continue;
 			DBManager.getDBManager().ProcessCommand(chaine);
 		}
 		lectureClavier.close();

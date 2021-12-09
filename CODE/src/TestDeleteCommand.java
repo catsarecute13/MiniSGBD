@@ -17,7 +17,7 @@ public class TestDeleteCommand {
 		DeleteCommand delete = new DeleteCommand("DELETE FROM S WHERE B=167 AND A=GR AND F=12");
 		delete.Execute();
 		
-		SelectMonoCommand select = new SelectMonoCommand("SELECT * FROM S");
+		SelectMonoCommand select = new SelectMonoCommand("SELECTMONO * FROM S");
 		select.Execute();
 
 	}
