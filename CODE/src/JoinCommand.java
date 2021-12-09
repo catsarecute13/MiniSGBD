@@ -46,11 +46,11 @@ public class JoinCommand {
     	RelationInfo rel1 = Catalog.getCatalog().getRelation(champ1[0]); //on récupère la première relation
     	RelationInfo rel2 = Catalog.getCatalog().getRelation(champ2[0]);//on récupère la seconde relation
     	Record [] records_r2= FileManager.getFileManager().getAllRecords(rel2); //je récupère tous les record de la seconde relation
-    	System.out.println("Les records de"+ rel2.nomRelation); 
-    	for(int k=0; k<records_r2.length;k++) {
-    		System.out.println(records_r2[k]);
-    	}
-    	System.out.println("---------------------Debut des comparaisons------------------------");
+    	//System.out.println("Les records de"+ rel2.nomRelation); 
+    	//for(int k=0; k<records_r2.length;k++) {
+    	//	System.out.println(records_r2[k]);
+    	//}
+    	//System.out.println("---------------------Debut des comparaisons------------------------");
     	int indexCol_r1 = rel1.getIdxInfoCol(champ1[1]); 
     	int indexCol_r2 = rel2.getIdxInfoCol(champ2[1]);
     	ByteBuffer headerPagebuff= BufferManager.getBufferManager().getpage(rel1.headerPageId); 
@@ -59,25 +59,25 @@ public class JoinCommand {
     	BufferManager.getBufferManager().freePage(rel1.headerPageId, false);
     	PageId factice = new PageId(-1,0);
     	 while(!PidSuiv.equals(factice)) {
-    		  //je r�cup�re la page 
+    		  //je récupère la page 
     		 Record [] record_page_rel1 = FileManager.getFileManager().getRecordsInDataPage(rel1, PidSuiv);
-    		 System.out.println("Les records de la page "+ PidSuiv.PageIdx+ " de"+ rel1.nomRelation); 
-    	    	for(int k=0; k<record_page_rel1.length;k++) {
-    	    		System.out.println(record_page_rel1[k]);
-    	    	}
-    	    System.out.println("-------------");
+    		 //System.out.println("Les records de la page "+ PidSuiv.PageIdx+ " de"+ rel1.nomRelation); 
+    	    	//for(int k=0; k<record_page_rel1.length;k++) {
+    	    		//System.out.println(record_page_rel1[k]);
+    	    	//}
+    	   // System.out.println("-------------");
     		 //Je compare les tuples de la page avec tous ceux de rel2
     		 for(int i=0; i<record_page_rel1.length; i++) {
     			 for(int j=0; j<records_r2.length; j++) {
-    				 System.out.println("record de "+ rel1.nomRelation+":"+ record_page_rel1[i]);
-    				 System.out.println("record de "+rel2.nomRelation+": "+records_r2[j]);
+    				// System.out.println("record de "+ rel1.nomRelation+":"+ record_page_rel1[i]);
+    				 //System.out.println("record de "+rel2.nomRelation+": "+records_r2[j]);
     				 boolean egaux = record_page_rel1[i].compareTo(indexCol_r1, records_r2[j], indexCol_r2);
-    				 System.out.println("egaux :" + (egaux ? "oui" : "non"));
-    				 System.out.println("******************");
+    				 //System.out.println("egaux :" + (egaux ? "oui" : "non"));
+    				 //System.out.println("******************");
     				 if(egaux) {
-    					 System.out.println("merging...");
+    					// System.out.println("merging...");
     					 System.out.println(record_page_rel1[i].merge(records_r2[j]));
-    					 System.out.println("****************");
+    					 //System.out.println("****************");
     					 nb_merge++; 
     				 }
     			 }
@@ -94,24 +94,24 @@ public class JoinCommand {
      	while(!PidPre.equals(factice)) {
   		  //je récupère la page 
   		 Record [] record_page_rel1 = FileManager.getFileManager().getRecordsInDataPage(rel1, PidPre); 
-  		System.out.println("Les records de la page "+ PidPre.PageIdx+ " de"+ rel1.nomRelation); 
-    	for(int k=0; k<record_page_rel1.length;k++) {
-    		System.out.println(record_page_rel1[k]);
-    	}
-    	System.out.println("-------------");
+  		//System.out.println("Les records de la page "+ PidPre.PageIdx+ " de"+ rel1.nomRelation); 
+    	//for(int k=0; k<record_page_rel1.length;k++) {
+    		//System.out.println(record_page_rel1[k]);
+    	//}
+    	//System.out.println("-------------");
   		 //Je compare les tuples de la page avec tous ceux de rel2
   		 for(int i=0; i<record_page_rel1.length; i++) {
   			 for(int j=0; j<records_r2.length; j++) {
-  				System.out.println("record de " +rel1.nomRelation +": " + record_page_rel1[i]);
-				 System.out.println("record de " +rel2.nomRelation +": "+ records_r2[j]);
+  				//System.out.println("record de " +rel1.nomRelation +": " + record_page_rel1[i]);
+				 //System.out.println("record de " +rel2.nomRelation +": "+ records_r2[j]);
 				 boolean egaux = record_page_rel1[i].compareTo(indexCol_r1, records_r2[j], indexCol_r2);
-				 System.out.println("egaux :" + (egaux ? "oui" : "non"));
-				 System.out.println("******************");
+				// System.out.println("egaux :" + (egaux ? "oui" : "non"));
+				 //System.out.println("******************");
   				 if(egaux) {
-  					 System.out.println("merging...");
+  					// System.out.println("merging...");
 					 System.out.println(record_page_rel1[i].merge(records_r2[j]));
-					 System.out.println("****************");
-  					 System.out.println(record_page_rel1[i].merge(records_r2[j]));
+					 //System.out.println("****************");
+  					 //System.out.println(record_page_rel1[i].merge(records_r2[j]));
   					 nb_merge++; 
   				 }
   			 }

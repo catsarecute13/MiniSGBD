@@ -46,15 +46,15 @@ public class SelectMonoCommand {
 
 				//conditions.add(st.nextToken("AND").trim());
 				String [] tmp = s.split("=|<=|>=|<>|<|>"); //nomCol, valeur
-				System.out.println(Arrays.toString(tmp));
+				//System.out.println(Arrays.toString(tmp));
 				nomOp[0]=tmp[0]; //On met le nom de la colonne dans nomOp
-				System.out.println(nomOp[0]);
+				//System.out.println(nomOp[0]);
 				
 				String typeCol =null; 
 				for(ColInfo c : relation.infoCol) {
 					if(c.nomCol.equals(nomOp[0])) {//Tant qu'on a pas trouve la colonne
 						typeCol = c.getTypeCol(tmp[0]);
-						System.out.println(typeCol);
+						//System.out.println(typeCol);
 						}
 				}
 				
@@ -68,7 +68,7 @@ public class SelectMonoCommand {
 				default: 
 					conditions.put(nomOp, tmp[1]); 
 				}
-				System.out.println(conditionsToString());
+				//System.out.println(conditionsToString());
 				
 				if(st.hasMoreTokens()) {
 					st.nextToken(); //AND 	
@@ -99,11 +99,11 @@ public class SelectMonoCommand {
 			for(int j = 0; j<taille; j++) {
 				boolean removed = false; 
 				Record r = res.get(j);
-				System.out.println("record: "+r);
+				//System.out.println("record: "+r);
 				for(String [] k : conditions.keySet()) {
 					int i =relation.getIdxInfoCol(k[0]); 
 					int retourCompare = compareTo(r.values[i],conditions.get(k));
-					System.out.println("\t"+Arrays.toString(k)+ ": retour compareTo= "+ retourCompare + " i=" + i);
+					//System.out.println("\t"+Arrays.toString(k)+ ": retour compareTo= "+ retourCompare + " i=" + i);
 					switch(k[1]) { //k[1] est l'operateur //Vu qu'on utilise compareTo on peut imaginer donner le resultat avec des AND
 					case ">": // Faire selon le type 
 						if(retourCompare <=0){
@@ -148,7 +148,7 @@ public class SelectMonoCommand {
 						}
 						break; 
 					}
-					System.out.println("removed="+removed);
+					//System.out.println("removed="+removed);
 					if(removed) {
 						break;
 					}
