@@ -84,7 +84,7 @@ public class JoinCommand {
     		 } 
     		 PageId tmp = new PageId(PidSuiv); //le pid à free 
     		 ByteBuffer pageSuiv= BufferManager.getBufferManager().getpage(PidSuiv);
-    		 PidSuiv= FileManager.getFileManager().readPageIdFromPageBuffer(pageSuiv, false);//la prochaine page à lire
+    		 PidSuiv= FileManager.getFileManager().readPageIdFromPageBuffer(pageSuiv, true);//la prochaine page à lire
     		 BufferManager.getBufferManager().freePage(tmp, false);
     	 }
     	 //pages non pleines
@@ -118,7 +118,8 @@ public class JoinCommand {
   		 }
   		 PageId tmp = new PageId(PidPre); //le pid à free 
   		 ByteBuffer pageSuiv= BufferManager.getBufferManager().getpage(PidPre);//buffer
-  		 PidPre= FileManager.getFileManager().readPageIdFromPageBuffer(pageSuiv, true);//la prochaine page � lire
+  		 PidPre= FileManager.getFileManager().readPageIdFromPageBuffer(pageSuiv, true);//la prochaine page à lire
+  		 System.out.println(PidPre);
   		 BufferManager.getBufferManager().freePage(tmp, false);
   	 }
      System.out.println("Total records :"+ nb_merge);

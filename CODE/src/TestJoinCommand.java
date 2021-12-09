@@ -32,8 +32,8 @@ public class TestJoinCommand {
 		    JoinCommand join = new JoinCommand("SELECTJOIN * FROM R,S WHERE R.C1=S.AA");
 		    join.Execute(); 
 		}catch(Exception e) {
-			System.out.println(e.getMessage());
-			e.getStackTrace();
+			System.out.println("ERREUR " +e.getMessage());
+			e.printStackTrace();
 		}
 
 	
