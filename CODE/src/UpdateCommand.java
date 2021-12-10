@@ -70,7 +70,7 @@ public class UpdateCommand {
             }
         }
         DeleteCommand del=new DeleteCommand("DELETE FROM "+nomRelation+where);
-        del.Execute();
+        del.Update();
         int tupCount=0;
         for (int i=0;i<res.size();i++){
             StringBuffer buff=new StringBuffer();

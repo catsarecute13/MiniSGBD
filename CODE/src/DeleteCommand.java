@@ -169,7 +169,86 @@ public class DeleteCommand {
 			
 			}
 		
-	}
-	
-	
+            public void Update() {
+                ArrayList<Record> res =new ArrayList<Record>(Arrays.asList(FileManager.getFileManager().getAllRecords(relation))); 
+                ArrayList<CreateIndexCommand> index=CreateIndexCommand.getIndex(nomRelation); //INDEX
+                    //verifier criteres des condition <1 ou >20 
+                    int nbConditions = conditions.keySet().size() ; 
+                    if(nbConditions <1 || nbConditions>20 ) {
+                        System.out.println("Veuillez entrer un nombre de conditions entre 1 et 20 (inclus)!"); 
+                        return; 
+                    }
+                        /**
+                         * Pour chaque record on verifie toutes les conditions
+                         * 		Si une condition n'est pas satisfaite, on supprime le record des resultats; 
+                         * 			
+                         * */
+                    int taille = res.size(); 
+                    for(int j = 0; j<taille; j++) {
+                        boolean removed = false; 
+                        Record r = res.get(j);
+                        for(String [] k : conditions.keySet()) {
+                            int i =relation.getIdxInfoCol(k[0]); 
+                            int retourCompare = compareTo(r.values[i],conditions.get(k));
+                            //System.out.println(Arrays.toString(k)+ ": retour compareTo= "+ retourCompare);
+                            switch(k[1]) { //k[1] est l'operateur //Vu qu'on utilise compareTo on peut imaginer donner le resultat avec des AND
+                            case ">": // Faire selon le type 
+                                if(retourCompare <=0){
+                                    removed = res.remove(r); 
+                                    taille --; 
+                                    j=j-1; 
+                                }
+                                break;
+                            case ">=": 
+                                if(retourCompare<0) {
+                                    removed = res.remove(r);
+                                    taille--;
+                                    j--;
+                                }
+                                break;
+                            case "<": 
+                                if(retourCompare>= 0){
+                                    removed = res.remove(r);
+                                    taille--; 
+                                    j--;
+                                }
+                                break;
+                            case "<=": 
+                                if(retourCompare >0) {
+                                    removed = res.remove(r);
+                                    taille--; 
+                                    j--; 
+                                }
+                                break; 
+                            case "<>": 
+                                if(retourCompare ==0) {
+                                    removed = res.remove(r); 
+                                    taille--; 
+                                    j--; 
+                                }
+                                break; 
+                            case "=": 
+                                if(retourCompare != 0) {
+                                    removed = res.remove(r); 
+                                    taille--; 
+                                    j--;
+                                }
+                                break; 
+                            }
+                        if(removed) {
+                            break;
+                        }
+                            
+                        }
+                    }
+                    //suppression des records 
+                    for(Record r: res) {
+                        FileManager.getFileManager().deleteRecordFromRelation(r);
+                        for(CreateIndexCommand ind:index){ //Delete Records from Index
+                            ind.Delete(r);
+                        }
+                    }
+                
+                }
 
+	}
