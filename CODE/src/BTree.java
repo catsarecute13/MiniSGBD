@@ -17,15 +17,9 @@ public class BTree {
           if (this.key[i] == k) {
             res.add(this.res[i]);
           }
-          if (this.key[i]>k) {
-            break;
-          }
         }
         if (!this.leaf) {
           for(int i=0;i<this.n+1;i++){
-            if (this.child[i].key[0]>k){
-              break;
-            }
             this.child[i].Find(k,res);
           }
         }

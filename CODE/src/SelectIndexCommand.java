@@ -36,5 +36,6 @@ public class SelectIndexCommand{
         for (Record r:res){
             System.out.println(r);
         }
+        System.out.println("Total records: "+res.size());
     }
 }
