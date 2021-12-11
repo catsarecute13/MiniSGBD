@@ -77,7 +77,7 @@ public class UpdateCommand {
             if (res.get(i).equals(comp.get(i))){
                 tupCount++;
             }
-            InsertCommand insert=new InsertCommand("INSERT INTO "+nomRelation+" RECORD "+res.get(i).toString());
+            InsertCommand insert=new InsertCommand("INSERT INTO "+nomRelation+" RECORD "+res.get(i).updateStringFormat());
             insert.Execute();
         }
         System.out.println("Total updated records: "+tupCount);
