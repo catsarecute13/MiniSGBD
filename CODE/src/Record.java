@@ -51,12 +51,7 @@ public class Record {
 	
 	
 	public boolean compareTo(int indxCol, Record r2, int indxCol_r2) {
-		if (values[indxCol] instanceof Integer || values[indxCol] instanceof Float) {
-			return values[indxCol] == r2.values[indxCol_r2]; 
-		}
-		else {
 			return values[indxCol].equals(r2.values[indxCol_r2]);
-		}
 	}
 	@Override
 	public String toString() {
