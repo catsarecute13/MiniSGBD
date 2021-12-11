@@ -107,4 +107,24 @@ public class Record {
 		}
 		return sb.substring(0, sb.length()-3);
 	}
+	
+	public String updateStringFormat() {
+		StringBuffer buffer = new StringBuffer("(");
+		for(int i = 0; i <relation.nbColonnes; i++) {
+			Object tmp= values[i]; 
+			if(tmp instanceof Integer) {
+				buffer.append(((Integer) tmp).intValue()).append(",");
+				}
+			else if(tmp instanceof Float) {
+				buffer.append(((Float)tmp).floatValue()).append(","); 
+			}
+			else {
+				buffer.append((String)tmp).append(","); 
+			}
+	}
+		 buffer.deleteCharAt(buffer.length()-1);
+		 buffer.append(")");
+		 return buffer.toString();
+
+	}
 }
