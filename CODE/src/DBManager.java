@@ -45,6 +45,12 @@ public class DBManager {
             	JoinCommand join = new JoinCommand(ch);
             	join.Execute();
             	break;
+            case "UPDATE":
+            	UpdateCommand update = new UpdateCommand(ch);
+            	update.Execute();
+            case "CREATEINDEX": 
+            	CreateIndexCommand index = new CreateIndexCommand(ch);
+            	index.Execute();            
             default:
             	System.out.println("Aucune commande de ce type.");
         }

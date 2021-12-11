@@ -5,8 +5,6 @@ public class Record {
 	public Object [] values; 
 	public Rid rid;
 
-	
-	
 	public Record(RelationInfo rel) { 
 		relation = rel; 
 		values = new Object [relation.nbColonnes]; 
