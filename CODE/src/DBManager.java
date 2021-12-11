@@ -48,9 +48,11 @@ public class DBManager {
             case "UPDATE":
             	UpdateCommand update = new UpdateCommand(ch);
             	update.Execute();
+            	break;
             case "CREATEINDEX": 
             	CreateIndexCommand index = new CreateIndexCommand(ch);
-            	index.Execute();            
+            	index.Execute();    
+            	break;
             default:
             	System.out.println("Aucune commande de ce type.");
         }
