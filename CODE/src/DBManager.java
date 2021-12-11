@@ -56,6 +56,7 @@ public class DBManager {
             case "SELECTINDEX": 
             	SelectIndexCommand selectIndex = new SelectIndexCommand(ch);
             	selectIndex.Execute();
+            	break;
             default:
             	System.out.println("Aucune commande de ce type.");
         }
