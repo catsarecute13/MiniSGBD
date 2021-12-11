@@ -53,6 +53,9 @@ public class DBManager {
             	CreateIndexCommand index = new CreateIndexCommand(ch);
             	index.Execute();    
             	break;
+            case "SELECTINDEX": 
+            	SelectIndexCommand selectIndex = new SelectIndexCommand(ch);
+            	selectIndex.Execute();
             default:
             	System.out.println("Aucune commande de ce type.");
         }
